@@ -1,0 +1,13 @@
+1. man man|grep "keyword"
+2. Multiple options start with "base", so you need to type "basen"+TAB
+3. "mkdir --p"+TAB
+4. mkdir prog/hello -p
+5. rm -i to ask for confirmation before each removal
+6. rm -r for recursive removal to remove a folder with all subfolders
+7. ls -lt :  'l' for a list and 't' for timely sorting
+8. '.' is the current folder, '..' is the parent folder
+   '~' is the home directory "home/USERNAME/"
+9. cd with no arguments go to the home directory
+10. the home directory is '~', $HOME, "home/USERNAME"
+
+

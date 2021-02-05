@@ -1,0 +1,9 @@
+A. Ubuntu on laptop
+B. CTRL+ALT+T
+C. man man
+D. Check
+E. TAB
+F. nano and VSCode are installed
+G. vim is also installed
+H. Check
+I. See seperate file questions.txt
