@@ -1,0 +1,23 @@
+1. What is the meaning of the following makefile variables
+	$@, $<, $^, CFLAGS LDFLAGS LDLIBS
+Answer:
+	$@: the filename of the target
+	$<: the name of the first prerequisite
+	$^: the names of all the prerequisites with spaces between
+	CFLAGS: extra flags to c compiler
+	LDFLAGS: extra flags to linker
+	LDLIBS:  libraries to link
+
+2. the makefile will print
+	CFLAGS
+	FFLAGS
+	FFLAGS
+	-Wall -Ofast -std=c1x
+
+Since $TEST = $(T)EST
+and to reference a variable named TEST one must use  $(TEST)
+
+3. 7, 8 and 9 will compile and link the program
+	7: complies and links in one go
+	8: the same but with variables
+	9: makes object files and then links them to an execuatable
