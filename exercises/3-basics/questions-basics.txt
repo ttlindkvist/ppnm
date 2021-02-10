@@ -1,0 +1,20 @@
+1. What is the main function?
+	The function that is first called upon execution of the program
+2. What is compilation and linking? What is source code, object code, executable code?
+	Compilation: c code is turned into object code (machine code)
+	linking: All the object code is linked together with the dependent libraries to form an
+		executable program
+	Source code: The code that we write
+	Object code: Compiled source code - a sequence of machine-readable instructions
+	Executable code: The complete instructions for the program
+
+3. How can you copile and link a C-program which is wholly contained in one file, say hello.c?
+	>> gcc hello.c -o hello
+Compiled into an executable hello. How do you run the resulting code?
+	./hello
+
+4. How do you supply the compiler with the description of the printf? Why? How do you link?
+
+5. What is stdio.h? Why <>?
+
+6. 

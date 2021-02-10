@@ -17,7 +17,13 @@ Answer:
 Since $TEST = $(T)EST
 and to reference a variable named TEST one must use  $(TEST)
 
-3. 7, 8 and 9 will compile and link the program
+3. all but 6 will compile and link the program
+	1: implicit
+	2: implicit
+	3: implicit will not make a main.o
+	4: implicit chain
+	5: implicit chain
+	6: will however compile and link with 'make main'
 	7: complies and links in one go
 	8: the same but with variables
 	9: makes object files and then links them to an execuatable
