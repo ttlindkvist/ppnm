@@ -1,0 +1,46 @@
+1. What is the main function?
+	The function that is first called upon execution of the program
+2. What is compilation and linking? What is source code, object code, executable code?
+	Compilation: c code is turned into object code (machine code)
+	linking: All the object code is linked together with the dependent libraries to form an
+		executable program
+	Source code: The code that we write
+	Object code: Compiled source code - a sequence of machine-readable instructions
+	Executable code: The complete instructions for the program
+
+3. How can you copile and link a C-program which is wholly contained in one file, say hello.c?
+	>> gcc hello.c -o hello
+Compiled into an executable hello. How do you run the resulting code?
+	./hello
+
+4. How do you supply the compiler with the description of the printf? Why? How do you link?
+	#include<stdio.h>
+	Only the very basics are included by default
+	No need to link - is in the standard library
+
+5. What is stdio.h? Why <>?
+	The header file containing the description of multiple in/out functions. 
+	The <> indicate that the compiler should look at the standard include paths
+	ie. it's not located in the currect project dir
+
+6. How do you get the manual for the C std lib function printf?
+	Look at all manual pages with printf by >>man -k printf
+	>> man 3 printf
+
+7. What are built in datatypes for numbers in C?
+	Integers: int, short, long, long long 
+	Technically also char
+	All come in signed and unsigned versions
+
+	Decimals: float, double, long double
+
+8. What is the result of 1/2 in C?
+	No automatic promotion of datatypes. Both 1 and 2 are integers, so integer-division occurs -> 1/2 = floor(1/2) = 0
+
+9. In order to use math functions, what is needed to?
+	\#include<math.h> and link via -lm
+
+10. What is tgmath.h?
+	Type-generic math - incorporates complex numbers in all usual math functions
+	linking via -lm? 
+
