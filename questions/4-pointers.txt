@@ -1,0 +1,4 @@
+1. How are arguments passed to functions in C? And what does that mean.
+	By default args are passed by value
+	this means a new object is created on function call
+	To spare memory one can pass a reference by &

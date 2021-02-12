@@ -1,0 +1,19 @@
+My max int ( while ): 2147483647
+INT_MAX: 2147483647
+My min int ( while ): -2147483648
+INT_MIN: -2147483648
+Calculated double epsilon (while) 2.22045e-16
+Calculated float epsilon (while) 1.19209e-07
+FLT_EPSILON=1.19209e-07
+Calculated long double epsilon (while) 1.0842e-19
+LDBL_EPSILON=1.0842e-19
+Other methods (for and do while) commented out
+
+sum up float=15.4037
+sum down float=18.8079
+Large discrepency since the float epsilon is rather large.     Summing up after a while, we are adding a small number to a large one, resulting in nothing done.
+    But summing down means the following addition becomes more on the order of the previous sum, making addition possible.
+
+This is the harmonic series, which does not converge.
+sum up double=22.0648
+sum down double=22.0648
