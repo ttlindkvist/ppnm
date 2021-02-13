@@ -3,6 +3,46 @@
 #include<limits.h>
 #include<float.h>
 
+int equals(double a, double b, double tau, double epsilon);
+
+void name_digit(int i){
+    switch(i){
+        case 0:
+            printf("zero\n");
+            break;
+        case 1:
+            printf("one\n");
+            break;
+        case 2:
+            printf("two\n");
+            break;
+        case 3:
+            printf("three\n");
+            break;
+        case 4:
+            printf("four\n");
+            break;
+        case 5:
+            printf("five\n");
+            break;
+        case 6:
+            printf("six\n");
+            break;
+        case 7:
+            printf("seven\n");
+            break;
+        case 8:
+            printf("eight\n");
+            break;
+        case 9:
+            printf("nine\n");
+            break;
+        default:
+            printf("not a digit\n");
+            break;
+    }
+}
+
 int main(){
     int i=1;
     while(i+1>i) {
@@ -105,6 +145,14 @@ int main(){
     }
     printf("sum down double=%g\n", sum_down_double);
 
+
+    double a = 100.3;
+    double b = 102;
+
+    printf("a=%g\nb=%g\nequal, tau=4 = %s\n", a, b, equals(a, b, 4, 0) == 1 ? "true" : "false");
+
+    printf("name_digit(9)=");
+    name_digit(9);
 
     return 0;
 }

@@ -1,7 +1,7 @@
 CFLAGS = -Wall -std=gnu99 -O
 LDLIBS = -lm
 .PHONEY: all clean
-all: out.txt
+all: out.txt Makefile
 	cat $<
 out.txt: main
 	./$< > $@

@@ -17,3 +17,7 @@ Large discrepency since the float epsilon is rather large.     Summing up after 
 This is the harmonic series, which does not converge.
 sum up double=22.0648
 sum down double=22.0648
+a=100.3
+b=102
+equal, tau=4 = true
+name_digit(9)=nine

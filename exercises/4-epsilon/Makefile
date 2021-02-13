@@ -5,7 +5,8 @@ all: out.txt Makefile
 	cat $<
 out.txt: main
 	./$< > $@
-main: main.o
+main: main.o equals.o
 main.o:
+equals.o:
 clean:
 	$(RM) main *.o out.txt 
