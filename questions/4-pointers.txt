@@ -1,4 +1,24 @@
 1. How are arguments passed to functions in C? And what does that mean.
 	By default args are passed by value
 	this means a new object is created on function call
-	To spare memory one can pass a reference by &
+	To save memory one can pass a reference by &
+2. if double x = 1.23, what is *(&x)
+	reference &x, dereference by * -> x==*(&x)
+3. NULL is a pointer to no valid object in memory
+4. all non-static variables declared inside a function dies on function return
+5. a static variable survives between function calls
+6. Output of the three programs
+	i=1
+	i=0
+	null-pointer exception perhaps?
+7. passing an array is like passing a pointer to the first object in the array
+8. a function with an array as parameter cannot know the size of the array
+9. calling outside an array might trigger a segfault, if the system realizes that the program calls memory outside the allowed
+10. which arrays can a function return
+	static arrays are allowed to be returned
+
+	variable-length arrays 
+	int a[n];
+	cannot be returned since the on return of a pointer there is no way of knowing when the local object dies
+
+	dynamic arrays are allowed to be returned by reference - since we now are in manual control of the memory.
