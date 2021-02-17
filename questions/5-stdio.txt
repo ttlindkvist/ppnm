@@ -1,0 +1,35 @@
+1. What are stdin, stdout and stderr in the context of POSIX programming?
+	The three standard streams for input/output of a program.
+	The communication channels between the program and its environment.
+	By default connected to the terminal.
+	stdin: input stream
+	stdout, stderr: output streams
+	
+2. What is EOF in the context of scanf?
+	EOF: End Of File
+
+3. Where to does printf write?
+	Writes to stdout
+
+4. Where from does scanf read?
+	Reads from stdin by default
+
+5. How do you redirect the standard output of a program to a file?
+	via '1>'/'>' or '2>'
+	that redirects, resp. stdout and stderr, to a file
+	ex: ./main > out.txt
+
+6. How do you send the content of a file into a program's standard input?
+	'<' redirects stdin to the contents of a file
+	ex: ./main < input.txt
+
+	Can also be done by pipelining the command cat *.txt to the program
+	ex: cat input.txt | ./main
+
+7. How do you connect the standard output of a program 
+	to the standard input of another program?
+	ex: ./out | ./in
+
+8. Which of the following makefiles will correctly compile and link
+	 main.c foo.c and bar.c into the executable main after the command make?
+
