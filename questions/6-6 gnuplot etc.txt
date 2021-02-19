@@ -1,0 +1,28 @@
+5. Explain the syntax `command` and $(command)
+    these are eqiuvalent in bash
+6. Why double $ in makefile?
+    Since $(VAR) is the way of referencing variables in Makefile
+    $$(command) is then used to indicate a bash command
+    Eqiuvalently $(shell command) can be used
+7. What is recipe echoing?     
+
+8. what does the following makefile print
+""
+pwd = a string
+test:
+	@echo pwd
+	@echo `pwd`
+	@echo $(pwd)
+	@echo $$(pwd)
+""
+Prints
+    pwd
+    /home/ttlindkvist/repos/ppnm/exercises/6-gnuplot
+    a string
+    /home/ttlindkvist/repos/ppnm/exercises/6-gnuplot
+
+9. In C type casting is allowed by (type)variable.
+What does the following line mean?
+    double a = *(double*)params;
+
+    Casting params to a double pointer, which is de-referenced to a double by *
