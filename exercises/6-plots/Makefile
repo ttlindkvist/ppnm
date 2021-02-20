@@ -3,7 +3,7 @@ CFLAGS = $(shell gsl-config --cflags)
 LDLIBS = $(shell gsl-config --libs)
 .PHONEY: all clean
 
-all: erf.gnuplot.png erf.pyxplot.png gamma.pyxplot.png gamma.gnuplot.png lgamma.pyxplot.png
+all: erf.gnuplot.png erf.pyxplot.png gamma.pyxplot.png gamma.gnuplot.png lgamma.pyxplot.png lgamma.gnuplot.png cgamma.pyxplot.png
 
 erf.pyxplot.png: erf.dat Makefile tabulated.erf.txt
 	echo '\
@@ -56,13 +56,35 @@ lgamma.pyxplot.png: lgamma.dat Makefile
 	"$<" using 1:4 with line title "homemade LGamma"\
 	' | tee lgamma.plot.gpi | pyxplot
 
+cgamma.pyxplot.png: cgamma.dat Makefile
+	echo '\
+	set terminal png;\
+	set output "$@";\
+	set size 8 square;\
+	set grid;\
+	set view -30,30;\
+	set xlabel "$$\mathcal{R}(z)$$";\
+	set ylabel "$$\mathcal{I}(z)$$";\
+	set zrange [0:6];\
+	set samples grid 50x50;\
+	set title "Complex Gamma Function";\
+	plot 3d\
+	"$<" using 1:2:3 with surface col black\
+	 fillcol tealBlue title "$$|\Gamma(z)|$$"\
+	' | pyxplot
+
 erf.plot.gpi: erf.pyxplot.png
 gamma.plot.gpi: gamma.pyxplot.png
+lgamma.plot.gpi: lgamma.pyxplot.png
+
 
 erf.gnuplot.png: erf.plot.gpi
 	cat $< | sed 's/pyxplot/gnuplot/' | gnuplot
 
 gamma.gnuplot.png: gamma.plot.gpi
+	cat $< | sed 's/pyxplot/gnuplot/' | gnuplot
+
+lgamma.gnuplot.png: lgamma.plot.gpi
 	cat $< | sed 's/pyxplot/gnuplot/' | gnuplot
 
 erf.dat gamma.dat lgamma.dat: main

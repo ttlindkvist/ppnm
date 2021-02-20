@@ -25,14 +25,19 @@ double LGamma(double x){
     double lnGamma=x*log(x+1/(12*x-1/x/10))-x+log(2*M_PI/x)/2;
     return lnGamma;
 }
+
 complex CGamma(complex z){
-    return z;
+    if(creal(z)<0)return M_PI/csin(M_PI*z)/CGamma(1-z);
+    if(creal(z)<9)return CGamma(z+1)/z;
+    double lnGamma=z*clog(z+1/(12*z-1/z/10))-z+clog(2*M_PI/z)/2;
+    return cexp(lnGamma);
 }
 
 int main(){
     FILE *erf_out = fopen("erf.dat", "w");
     FILE *gamma_out = fopen("gamma.dat", "w");
     FILE *lgamma_out = fopen("lgamma.dat", "w");
+    FILE *cgamma_out = fopen("cgamma.dat", "w"); 
 
     double xmin=-2, xmax=2;
     for(double x=xmin; x<=xmax; x+=1.0/16){
@@ -51,8 +56,19 @@ int main(){
         fprintf(lgamma_out, "%10g %10g %10g %10g\n", x, lgamma(x), gsl_sf_lngamma(x), LGamma(x));
     }
 
+    N = 500;
+    for(int i=0; i<N; i++){
+        for(int j=0; j<N; j++){
+            double x = -4.0 + 8.0*i/N + eps;
+            double y = -4.0 + 8.0*j/N + eps;
+            complex g = CGamma(x+I*y);
+            fprintf(cgamma_out, "%10g %10g %10g\n", x, y, cabs(g));
+        }
+    }
+
     fclose(erf_out);
     fclose(gamma_out);
     fclose(lgamma_out);
+    fclose(cgamma_out);
     return 0;
 }
