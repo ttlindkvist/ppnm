@@ -1,12 +1,35 @@
-5. Explain the syntax `command` and $(command)
+1. In gnuplot/pyxplot, how do you specify the ranges on the x- and y-axes?
+via the command set xrange [xmin:xmax]
+
+2. In the datafile for gnuplot, how do you separate data intended for separate lines on the plot?
+In separate columns
+
+3. How du you plot 2nd column vs 3rd?
+plot "datafile.txt" using 2:3
+
+4. Datafile with columns of (x, y). How do you plot y^2 vs x?
+plot "data.txt" using ($2**2):1
+
+5. How can you find whether GSL is installed?
+    run gsl-config
+
+6. How can you find which C-flags to use with you GSL installation?
+    run gsl-config --cflags
+
+7. Which libs to link with?
+    run gsl-config --libs
+
+8. Explain the syntax `command` and $(command)
     these are eqiuvalent in bash
-6. Why double $ in makefile?
+9. Why double $ in makefile?
     Since $(VAR) is the way of referencing variables in Makefile
     $$(command) is then used to indicate a bash command
     Eqiuvalently $(shell command) can be used
-7. What is recipe echoing?     
+10. What is recipe echoing?     
+The makefile prints/echoes each line of the recipe before execution
+If a line starts with '@' the echoing of that line is suppressed.
 
-8. what does the following makefile print
+11. what does the following makefile print
 ""
 pwd = a string
 test:
@@ -21,7 +44,7 @@ Prints
     a string
     /home/ttlindkvist/repos/ppnm/exercises/6-gnuplot
 
-9. In C type casting is allowed by (type)variable.
+12. In C type casting is allowed by (type)variable.
 What does the following line mean?
     double a = *(double*)params;
 
