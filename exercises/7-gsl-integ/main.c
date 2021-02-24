@@ -21,18 +21,24 @@ double integ_erf(double z){
     return result;
 }
 
-double gamma_integrand(double x, void *params){
-    double z = *(double*)params;
-    return pow(x, z-1.)*exp(-x);
+typedef struct {double x; double n;} bessel_params;
+
+double J_integrand(double tau, void *p){
+    bessel_params *params = (bessel_params*)p;
+    double x = params->x;
+    double n = params->n;
+
+    return cos(n*tau-x*sin(tau))/M_PI;
 }
-double integ_gamma(double z){
-    if(z<0) return integ_gamma(z+1)/z;
+double integ_J(double x, int n){
     gsl_integration_workspace *w = gsl_integration_workspace_alloc(1000);
     double result, error;
     gsl_function F;
-    F.function = &gamma_integrand;
-    F.params = &z;
-    gsl_integration_qagiu(&F, 0, 1e-3, 1e-5, 1000, w, &result, &error);
+    F.function = &J_integrand;
+    bessel_params params = {x, n};
+    F.params = &params;
+
+    gsl_integration_qags(&F, 0, M_PI, 1e-9, 1e-6, 1000, w, &result, &error);
     gsl_integration_workspace_free(w);
     
     return result;
@@ -48,7 +54,7 @@ int main(){
     gsl_integration_workspace_free(w);
 
     FILE *erf_out = fopen("erf.dat", "w");
-    FILE *gamma_out = fopen("gamma.dat", "w");
+    FILE *bessel_out = fopen("bessel.dat", "w");
 
     double xmin=-4, xmax = 4;
     int N = 1000;
@@ -57,13 +63,13 @@ int main(){
         fprintf(erf_out, "%.10f \t %.10f \t %.10f\n", x, integ_erf(x), gsl_sf_erf(x));
     }
 
-    xmin=-5, xmax = 7;
+    xmin=0, xmax = 20;
     for(int i = 0; i<N; i++){
-        double x = xmin + (xmax-xmin)/N*i + 0.003;
-        fprintf(gamma_out, "%.10f \t %.10f \t %.10f\n", x, integ_gamma(x), gsl_sf_gamma(x));
+        double x = xmin + (xmax-xmin)/N*i;
+        fprintf(bessel_out, "%.10f \t %.10f \t %.10f \t %.10f\n", x, integ_J(x, 0), integ_J(x, 1), integ_J(x, 2));
     }
 
     fclose(erf_out);
-    fclose(gamma_out);
+    fclose(bessel_out);
     return 0;
 }
