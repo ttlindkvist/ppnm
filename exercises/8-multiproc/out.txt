@@ -3,9 +3,9 @@ Single thread with N=1e+07
 Avg value of pi = 3.1420496
 
 pthreads with 4 threads and total N = 1e+07
-Avg value of pi = 3.1409848
+Avg value of pi = 3.1413096
 
 
 openmp with 4 threads and total N = 1e+07
-Avg value of pi = 3.1409848
+Avg value of pi = 3.1408696
 

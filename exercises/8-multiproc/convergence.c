@@ -14,8 +14,8 @@ void *monte_carlo_pi(void * a){
 
     int N_in = 0;
     for(int i = 0; i<N; i++){
-        double x = 1.0*rand_r(seed)/RAND_MAX;
-        double y = 1.0*rand_r(seed)/RAND_MAX;
+        double x = (double)rand_r(seed)/RAND_MAX;
+        double y = (double)rand_r(seed)/RAND_MAX;
         if(x*x+y*y < 1.0){
             N_in++;
         }

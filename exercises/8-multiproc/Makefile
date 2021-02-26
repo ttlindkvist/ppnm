@@ -9,10 +9,10 @@ all: out.txt time.txt convergence.dat convergence.png
 	cat out.txt
 	cat time.txt
 
-out.txt time.txt: pthreads_mc_pi_new single_thread openMP_mc_pi
+out.txt time.txt: pthreads_mc_pi_new single_thread openMP_mc_pi Makefile
 	time ./single_thread 10000000 1> out.txt 2> time.txt 
 	time ./pthreads_mc_pi_new 4 2500000 1>> out.txt 2>> time.txt
-	time ./openMP_mc_pi 10000000 1>> out.txt 2>> time.txt
+	time ./openMP_mc_pi 4 2500000 1>> out.txt 2>> time.txt
 
 convergence.png: convergence.dat Makefile
 	echo '\
