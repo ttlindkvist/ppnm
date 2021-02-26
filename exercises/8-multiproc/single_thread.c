@@ -31,7 +31,7 @@ int main(int argc, char **argv){
     monte_carlo_data dat = {.N = N, .seed = &seed};
     monte_carlo_pi((void*)&dat);
     double final_pi = 4.0*dat.N_in/(N);
-    printf("\nSingle thread with N=%g\nAvg value of pi = %.15g\n", (double)N, final_pi);
+    printf("\nSingle thread with N=%g\nMC value of pi = %.15g\n", (double)N, final_pi);
     
     return 0;
 }

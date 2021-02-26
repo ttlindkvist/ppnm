@@ -37,7 +37,7 @@ int main(int argc, char **argv){
 
     #pragma omp parallel for
     for(int i = 0; i<nthreads; i++){
-        seeds[i] = t+i;
+        seeds[i] = t+2*i;
         monte_carlo_data dat = {.N = N, .seed = seeds[i]};
         monte_carlo_pi((void*)&dat);
         N_in[i] = dat.N_in;
@@ -48,6 +48,6 @@ int main(int argc, char **argv){
         total_N_in += N_in[i];
     }
     double final_pi = 4.0*total_N_in/(N*nthreads);
-    printf("Avg value of pi = %.15g\n\n", final_pi);
+    printf("MC value of pi = %.15g\n\n", final_pi);
     return 0;
 }

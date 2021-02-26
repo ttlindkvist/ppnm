@@ -5,7 +5,7 @@ LDLIBS = -lm -pthread
 
 .PHONEY: all clean
 
-all: out.txt time.txt convergence.dat convergence.png
+all: out.txt time.txt convergence.png
 	cat out.txt
 	cat time.txt
 
@@ -30,7 +30,7 @@ convergence.png: convergence.dat Makefile
 	' | pyxplot
 
 convergence.dat: convergence
-	./convergence
+	./convergence 4
 
 pthreads_mc_pi_new: pthreads_mc_pi_new.c
 single_thread: single_thread.c

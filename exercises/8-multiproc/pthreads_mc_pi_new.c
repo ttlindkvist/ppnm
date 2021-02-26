@@ -42,14 +42,14 @@ int main(int argc, char **argv){
     for(int i = 0; i<nthreads-1; i++){
         seeds[i] = t+i;
         dat[i].N = N;
-        dat[i].seed = &seeds[i];
+        dat[i].seed = seeds[i];
         pthread_create(&threads[i], NULL, monte_carlo_pi, (void*)&dat[i]);
     }
 
     //Utilize main thread
     seeds[nthreads-1] = t+nthreads-1;
     dat[nthreads-1].N = N;
-    dat[nthreads-1].seed = &seeds[nthreads-1];
+    dat[nthreads-1].seed = seeds[nthreads-1];
     monte_carlo_pi((void*)&dat[nthreads-1]);
     
     double total_N_in = dat[nthreads-1].N_in;
@@ -59,7 +59,7 @@ int main(int argc, char **argv){
     }
 
     double final_pi = 4.0*total_N_in/(N*nthreads);
-    printf("Avg value of pi = %.15g\n\n", final_pi);
+    printf("MC value of pi = %.15g\n\n", final_pi);
     
     return 0;
 }
