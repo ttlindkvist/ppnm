@@ -1,4 +1,11 @@
-Thread nr 0 returns 3.14177
-Thread nr 1 returns 3.14079
-Thread nr 2 returns 3.14227
-Thread nr 3 returns 3.14189
+
+Single thread with N=1e+07
+Avg value of pi = 3.1420496
+
+pthreads with 4 threads and total N = 1e+07
+Avg value of pi = 3.1409848
+
+
+openmp with 4 threads and total N = 1e+07
+Avg value of pi = 3.1409848
+

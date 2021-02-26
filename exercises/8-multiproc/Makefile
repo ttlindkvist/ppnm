@@ -1,16 +1,40 @@
-CFLAGS += -O -Wall 
-LDLIBS += -lm -pthread -lpthread
+CFLAGS = -O -Wall -std=gnu11
+CFLAGS += -pthread
+CFLAGS += -fopenmp -lgomp
+LDLIBS = -lm -pthread
 
 .PHONEY: all clean
 
-all: out.txt
+all: out.txt time.txt convergence.dat convergence.png
 	cat out.txt
+	cat time.txt
 
-out.txt: main
-	./main > out.txt
+out.txt time.txt: pthreads_mc_pi_new single_thread openMP_mc_pi
+	time ./single_thread 10000000 1> out.txt 2> time.txt 
+	time ./pthreads_mc_pi_new 4 2500000 1>> out.txt 2>> time.txt
+	time ./openMP_mc_pi 10000000 1>> out.txt 2>> time.txt
 
-main: main.o
-main.o: main.c
+convergence.png: convergence.dat Makefile
+	echo '\
+	set terminal png;\
+	set output "$@";\
+	set key top right;\
+	set tics out;\
+	set logscale x y;\
+	set xlabel "N";\
+	set ylabel "relative error";\
+	set title "Convergence of Monte Carlo";\
+	plot \
+	 "$<" using 1:3 with points pointsize 0.4 title "$$ \\frac{Q_n - \pi}{\pi} $$",\
+	 "$<" using 1:4 with line title "$$\\propto \\frac{1}{\\sqrt{N}}$$"\
+	' | pyxplot
+
+convergence.dat: convergence
+	./convergence
+
+pthreads_mc_pi_new: pthreads_mc_pi_new.c
+single_thread: single_thread.c
+openMP_mc_pi: openMP_mc_pi.c
 
 clean:
-	$(RM) out.txt *.o main
+	$(RM) *.txt *.o pthreads_mc_pi_new single_thread openMP_mc_pi convergence *.png *.dat

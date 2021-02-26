@@ -29,13 +29,14 @@ int main(int argc, char **argv){
     int N = 1e7;
 
     int t = time(NULL);
-    if(argc > 1){
+    if(argc > 2){
         nthreads = atoi(argv[1]);
         N = atoi(argv[2]);
     }
+    printf("\npthreads with %d threads and total N = %g\n", nthreads, (double)N*nthreads);
     pthread_t threads[nthreads];
     pthread_attr_t *attributes = NULL;
-    int flags[nthreads];
+    
     unsigned int seeds[nthreads];
     monte_carlo_data dat[nthreads];
 
@@ -43,12 +44,17 @@ int main(int argc, char **argv){
         seeds[i] = t+i;
         dat[i].N = N;
         dat[i].seed = &seeds[i];
-        flags[i] = pthread_create(&threads[i], attributes, monte_carlo_pi, (void*)&dat[i]);
+        pthread_create(&threads[i], attributes, monte_carlo_pi, (void*)&dat[i]);
     }
+    double total_N_in = 0;
+    
     for(int i = 0; i<nthreads; i++){
-        flags[i] = pthread_join(threads[i], NULL);
+        pthread_join(threads[i], NULL);
         printf("Thread nr %d returns %g\n", i, 4.0*dat[i].N_in/dat[i].N);
+        total_N_in += dat[i].N_in;
     }
+    double final_pi = 4.0*total_N_in/(N*nthreads);
+    printf("Avg value of pi = %.15g\n\n", final_pi);
     
     return 0;
 }

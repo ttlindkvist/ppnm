@@ -1,0 +1,19 @@
+1. What is pthreads? Hint: man pthreads.
+
+2. Which header files do you have to include in order to use pthreads? Hint: man pthread_create.
+
+3. Do you need any CFLAGS and/or LDLIBS to use pthreads?
+
+4. How do you create a pthread?
+
+5. What is "thread-safe"? Hint: man pthreads|less --pattern=safe.
+
+6. Is rand thread-safe? Hint: man rand_r.
+
+7. What happens if you forget to join a joinable thread? Hint: man pthread_join|less --pattern=NOTE.
+
+8. What is OpenMP?
+
+9. Does your compiler supports OpenMP?
+
+10. What are the CFLAGS and LDLIBS for your installation of OpenMP?
