@@ -3,9 +3,9 @@ Single thread with N=1e+07
 MC value of pi = 3.1420496
 
 pthreads with 4 threads and total N = 1e+07
-MC value of pi = 3.14038
+MC value of pi = 3.1411352
 
 
 openmp with 4 threads and total N = 1e+07
-MC value of pi = 3.1398284
+MC value of pi = 3.1415944
 

@@ -1,7 +1,9 @@
 CFLAGS = -O -Wall -std=gnu11
 CFLAGS += -pthread
 CFLAGS += -fopenmp -lgomp
+CFLAGS += $(shell gsl-config --cflags)
 LDLIBS = -lm -pthread
+LDLIBS += $(shell gsl-config --libs)
 
 .PHONEY: all clean
 
@@ -18,15 +20,16 @@ convergence.png: convergence.dat Makefile
 	echo '\
 	set terminal png;\
 	set output "$@";\
-	set key top right;\
+	set key bottom left;\
 	set tics out;\
 	set logscale x y;\
 	set xlabel "N";\
 	set ylabel "relative error";\
 	set title "Convergence of Monte Carlo";\
 	plot \
-	 "$<" using 1:3 with points pointsize 0.4 title "$$ \\frac{Q_n - \pi}{\pi} $$",\
-	 "$<" using 1:4 with line title "$$\\propto \\frac{1}{\\sqrt{N}}$$"\
+	 "$<" using 1:2 with points pointsize 0.4 title "rand-r",\
+	 "$<" using 1:3 with points pointsize 0.4 color red title "Low discrepancy",\
+	 "$<" using 1:4 with line color black title "$$\\frac{1}{\\sqrt{N}}$$"\
 	' | pyxplot
 
 convergence.dat: convergence
