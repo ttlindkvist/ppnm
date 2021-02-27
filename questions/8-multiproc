@@ -1,19 +1,32 @@
 1. What is pthreads? Hint: man pthreads.
+    an inteface for multithreaded processing
 
 2. Which header files do you have to include in order to use pthreads? Hint: man pthread_create.
+    #include<pthread.h>
 
 3. Do you need any CFLAGS and/or LDLIBS to use pthreads?
+    Compile and link with -pthread
 
 4. How do you create a pthread?
+    With pthread_create()
 
 5. What is "thread-safe"? Hint: man pthreads|less --pattern=safe.
+    Thread-safe is a process that safely delivers the same results even when run from multiple threads
 
 6. Is rand thread-safe? Hint: man rand_r.
+    rand is not thread safe, as it stores, and uses a state of the generator 
+    - this is a problem if the generator is called two times without statechange between
 
 7. What happens if you forget to join a joinable thread? Hint: man pthread_join|less --pattern=NOTE.
+    the thread continues forever and becomes a zombie thread.    
 
 8. What is OpenMP?
+    another interface for multi-processing
 
-9. Does your compiler supports OpenMP?
+9. Does your compiler support OpenMP?
+    yes
 
 10. What are the CFLAGS and LDLIBS for your installation of OpenMP?
+    #include "omp.h"
+    compiles with CFLAGS += -fopenmp -lgomp
+    no need to link with anything
