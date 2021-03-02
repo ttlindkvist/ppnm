@@ -1,0 +1,18 @@
+x = -1.1379 -2.83303 0.851459 
+A*x = 6.23 5.37 2.29 
+b = 6.23 5.37 2.29 
+
+4th order Hilbert matrix eigenvalues and eigenvectors
+
+eigenvalue = 9.67023e-05
+eigenvector = -0.0291933 0.328712 -0.791411 0.514553 
+
+eigenvalue = 0.00673827
+eigenvector = -0.179186 0.741918 -0.100228 -0.638283 
+
+eigenvalue = 0.169141
+eigenvector = 0.582076 -0.370502 -0.509579 -0.514048 
+
+eigenvalue = 1.50021
+eigenvector = 0.792608 0.451923 0.322416 0.252161 
+
