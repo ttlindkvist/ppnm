@@ -1,4 +1,4 @@
-CFLAGS = -O -Wall
+CFLAGS = -O -Wall -Werror
 CFLAGS += $(shell gsl-config --cflags)
 LDLIBS = -lm
 LDLIBS += $(shell gsl-config --libs)

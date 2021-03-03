@@ -8,8 +8,8 @@
 // [	 8.08 	 -6.31 	 -3.89 	] [x1] 	 = 	 [5.37]
 // [	 -4.36 	 1.00 	 0.19 	] [x2] 	 	 [2.29]
 
-void print_vector(gsl_vector *x, int n){
-    for(int i = 0; i<n; i++){
+void print_vector(gsl_vector *x){
+    for(int i = 0; i<x->size; i++){
         printf("%g ", gsl_vector_get(x, i));
     }
 }
@@ -22,6 +22,10 @@ void init_Hilbert_matrix(gsl_matrix *a, int n){
 }
 
 int main(){
+    printf("A: solve the following system of equations\n");
+    printf("[ 6.13   -2.90   5.86 ] [x0]   [6.23]\n");
+    printf("[ 8.08   -6.31  -3.89 ] [x1] = [5.37]\n");
+    printf("[-4.36    1.00   0.19 ] [x2]   [2.29]\n");
     double a_data[] = {
         6.13, -2.90, 5.86,
         8.08, -6.31, -3.89,
@@ -40,15 +44,15 @@ int main(){
     gsl_blas_dgemv(CblasNoTrans, 1, A_copy, x, 0, product);
     
     printf("x = ");
-    print_vector(x, 3);
+    print_vector(x);
     printf("\n");
     
     printf("A*x = ");
-    print_vector(product, 3);
+    print_vector(product);
     printf("\n");
     
     printf("b = ");
-    print_vector(&b.vector, 3);
+    print_vector(&b.vector);
     printf("\n");
     
     
@@ -56,7 +60,7 @@ int main(){
     gsl_vector_free(product);
     gsl_matrix_free(A_copy);
     
-    printf("\n4th order Hilbert matrix eigenvalues and eigenvectors\n\n");
+    printf("\nB: 4th order Hilbert matrix eigenvalues and eigenvectors\n\n");
     
     //Compute eigenvectors and eigenvalues for 4th order Hilbert matrix.
     gsl_matrix *H = gsl_matrix_alloc(4, 4);
@@ -65,7 +69,7 @@ int main(){
     gsl_vector *eval = gsl_vector_alloc(4);
     gsl_matrix *evec = gsl_matrix_alloc(4, 4);
 
-    gsl_eigen_symmv_workspace * w = gsl_eigen_symmv_alloc(4);
+    gsl_eigen_symmv_workspace *w = gsl_eigen_symmv_alloc(4);
 
     gsl_eigen_symmv(H, eval, evec, w);
 
@@ -79,13 +83,12 @@ int main(){
 
         printf("eigenvalue = %g\n", eval_i);
         printf("eigenvector = ");
-        print_vector(&evec_i.vector, 4);
+        print_vector(&evec_i.vector);
         printf("\n\n");
     }
 
     gsl_vector_free(eval);
     gsl_matrix_free(evec);
     gsl_matrix_free(H);
-    
     return 0;
 }

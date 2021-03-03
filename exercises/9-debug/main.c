@@ -20,6 +20,7 @@ int main(void)
 	printf("half m_{00} (should be 33):\n");
 	// int *status = print_half_00(&m);
 	int status = print_half_00(m);
+	// if(status>0) - printf returns the number of characters written, and -1 on error
 	if(status<0)
 		// printf("status=%g : SOMETHING WENT TERRIBLY WRONG (status>0)\n",*status);
 		printf("status=%d : SOMETHING WENT TERRIBLY WRONG (status<0)\n",status);

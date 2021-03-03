@@ -1,4 +1,5 @@
-CFLAGS = -o -w -std=gnu99
+# CFLAGS = -o -w -std=gnu99
+CFLAGS = -O -Wall -std=gnu99
 # CFLAGS += 'gsl-config --cflags'
 CFLAGS += `gsl-config --cflags`
 
