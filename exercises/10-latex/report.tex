@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{listings}
 \title{Implementing the exponential function in C}
 \author{T.T.~Lindkvist}
 \date{}
@@ -20,12 +21,48 @@
 	\begin{align}
 		e^{-x} = \frac{1}{e^x} \;,
 	\end{align}
-	and hereby only need to evaluate the function for positive argument $x$ - making all terms in the series positive. Summing terms of alternating sign can make the calculation lose precision, since the terms are of comparable order of magnitude.
-	Summing large to small terms lose precision. Avoid many multiplication by making a convoluted expression.
-\subsection{Pseudocode}
-		
-	
+	and hereby only need to evaluate the function for positive argument $x$ - making all terms in the series positive. We do this, since summing terms of alternating sign can make the calculation lose precision, since the terms are of comparable order of magnitude. Also, in order to not lose precision when adding the smaller (higher order, since $ x $ is small) terms, one could add the numbers from highest to lowest order, or in order to not use so many multiplications, write the terms inside one another, in this convoluted fashion.
+	\begin{align*}
+		\sum_{n=0}^{N} \frac{x^n}{n!} = 
+		1+x\left(1+\frac{x}{2}\left(1+\frac{x}{3}\left(1+\frac{x}{4}\left(1+\frac{x}{5}\left(1+\frac{x}{6}\left(\cdots\right)\right)\right)\right)\right)\right)
+	\end{align*}
 \section{C Implementation}
-
+Suppose we choose the maximum $ x $, where the Taylor expansion is directly used, $ x_{max} = 1/8 $, and a maximum order of evaluation $ N=10 $, then the function can be written in C, like this:
+\lstset{language=Pascal}
+\begin{lstlisting}
+double ex(double x){
+    if(x<0)    return 1/ex(-x);
+    if(x>1./8) return pow(ex(x/2), 2);
+    return 1+x*(1+x/2*(1+x/3*(1+x/4*(1+x/5*\
+    (1+x/6*(1+x/7*(1+x/8*(1+x/9*(1+x/10)))))))));
+}
+\end{lstlisting}
 \section{Comparison of implementations}
-\end{document}
+On figure \ref{fig:1}, our implementation is plotted together with the implementation from \texttt{math.h}. As seen, they give approximately the same values, and with a very low relative error $<10^{-14}$, as seen on figure \ref{fig:relative}.
+\begin{figure}[h]
+	\centering
+	\includegraphics{plot1.png}
+	\caption{Shows our implementation together with the implementation from \texttt{math.h}. Note: the y-axis is logarithmic.}
+	\label{fig:1}
+\end{figure}
+\begin{figure}[h]
+	\includegraphics{plot2.png}
+	\caption{Shows the relative error of our implementation compared to the \textit{correct} implenentation from \texttt{math.h}. Note: the y-axis is logarithmic.}
+	\label{fig:relative}
+\end{figure}
+We can also look at the difference between only calculating the positive terms, and also evaluating the Taylor series with negative terms. These expressions are of course equal for positive $ x $, but at negative $ x $, the error is on the order of $ 10^{-13}$ to $10^{-15} $, as seen on figure \ref{fig:negative}.
+\begin{figure}[h]
+	\includegraphics{plot3.png}
+	\caption{Shows the relative error of our implementation with and without evaluation of negative terms.}
+	\label{fig:negative}
+\end{figure}
+We can also take a look at using the convoluted expression versus the ordinary sum of terms, but since we are using doubles, this yielded no difference when summing backwards from highest to lowest order, but when evaluating from lowest to highest order, a difference occurred.
+\begin{figure}[h]
+	\includegraphics{plot4.png}
+	\caption{Shows the relative error of the convoluted expression and summing the terms from lowest to highest order.}
+	\label{fig:summation}
+\end{figure}
+
+Small note, the steps seen on the graphs occur at powers of two - since the cutoff from direct evaluation of the taylor series is a power of two.
+
+\end{document}	
