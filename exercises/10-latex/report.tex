@@ -16,7 +16,7 @@
 	\begin{align}
 		e^x = e^{x/2}\cdot e^{x/2} \;.
 	\end{align}
-	Suppose we want to compute \texttt{exp(x)} for some $x$ larger than some $x_{max}$, where we know precision becomes an issue, we simply apply this rule of exponents recursively until we can get by, by calculating \texttt{exp(x')} for some $x'<x_{max}$.
+	Suppose we want to compute \texttt{exp(x)} for some $x$ larger than some $x_{max}$, where we know precision becomes an issue, we simply apply this rule of exponents recursively until we can get by, by calculating \texttt{exp(x')} for some $x'=x/2^n<x_{max}$.
 	We can also make use of another property of exponents
 	\begin{align}
 		e^{-x} = \frac{1}{e^x} \;,
@@ -47,22 +47,26 @@ On figure \ref{fig:1}, our implementation is plotted together with the implement
 \end{figure}
 \begin{figure}[h]
 	\includegraphics{plot2.png}
-	\caption{Shows the relative error of our implementation compared to the \textit{correct} implenentation from \texttt{math.h}. Note: the y-axis is logarithmic.}
+	\caption{Shows the relative error of our implementation compared to the \textit{correct} implementation from \texttt{math.h}. Note: the y-axis is logarithmic.}
 	\label{fig:relative}
 \end{figure}
-We can also look at the difference between only calculating the positive terms, and also evaluating the Taylor series with negative terms. These expressions are of course equal for positive $ x $, but at negative $ x $, the error is on the order of $ 10^{-13}$ to $10^{-15} $, as seen on figure \ref{fig:negative}.
+We can also look at the difference between only calculating the positive terms, and also evaluating the Taylor series with negative terms. On figure \ref{fig:negative} the relative error of the two expressions, with respect to \texttt{exp} from \texttt{math.h}. These expressions are of course equal for positive $ x $, but at negative $ x $, the expression with the negative terms, is actually more precise.
 \begin{figure}[h]
 	\includegraphics{plot3.png}
 	\caption{Shows the relative error of our implementation with and without evaluation of negative terms.}
 	\label{fig:negative}
 \end{figure}
-We can also take a look at using the convoluted expression versus the ordinary sum of terms, but since we are using doubles, this yielded no difference when summing backwards from highest to lowest order, but when evaluating from lowest to highest order, a difference occurred.
+We can also take a look at using the convoluted expression versus the ordinary sum of terms. This can be seen on figure \ref{fig:summation}. Since we are using doubles, this yielded no difference when summing backwards from highest to lowest order, but when evaluating from lowest to highest order, a difference occurred, and this is slightly more imprecise.
 \begin{figure}[h]
 	\includegraphics{plot4.png}
 	\caption{Shows the relative error of the convoluted expression and summing the terms from lowest to highest order.}
 	\label{fig:summation}
 \end{figure}
 
-Small note, the steps seen on the graphs occur at powers of two - since the cutoff from direct evaluation of the taylor series is a power of two.
-
+Small note: steps can be seen on the graphs at powers of two - since the cutoff from direct evaluation of the Taylor series is a power of two. This is better seen with a large number of evaluation points, so this is better illustrated on figure \ref{fig:largeN}.
+\begin{figure}[h]
+	\includegraphics{plot5.png}
+	\caption{Replica of figure \ref{fig:relative}, but with larger number of evaluation points and with dashed lines for multiples of two ($2^n$ for $ n>1 $)}
+	\label{fig:largeN}
+\end{figure}
 \end{document}	
