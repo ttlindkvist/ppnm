@@ -34,10 +34,11 @@ quadspline.png: quad.out Makefile
 	set xlabel "x";\
 	set ylabel "y";\
 	set xrange [0:6];\
-	set yrange [0:26];\
+	set yrange [-6:14];\
 	plot \
 	 "$<" using 1:2 with line color red title "Quad spline through points",\
 	 "$<" using 1:3 with line color black title "derivative",\
+	 "$<" using 1:4 with line color green title "integrated",\
 	 "qpoints.in" every ::1 using 1:2 with points title "points"\
 	' | pyxplot
 clean:

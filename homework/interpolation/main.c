@@ -60,7 +60,8 @@ int main(){
         double z = xs[0] + (xs[q_n-1]-xs[0])/N_eval*i;
         double spline_y = qspline_eval(s, z);
         double derivative = qspline_deriv(s, z);
-        fprintf(qoutput, "%g %g %g\n", z, spline_y, derivative);
+        double integrated = qspline_integ(s, z);
+        fprintf(qoutput, "%g %g %g %g\n", z, spline_y, derivative, integrated);
     }
     for(int i = 0; i<q_n-1; i++){ 
         fprintf(q_coef_out, "c%d = %g\n", i, s->c[i]);
