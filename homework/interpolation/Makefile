@@ -1,19 +1,22 @@
 CFLAGS = -O -Wall -Werror
+CFLAGS += $(shell gsl-config --cflags)
 LDLIBS = -lm
+LDLIBS += $(shell gsl-config --libs)
 
 .PHONEY: all clean
 
-all: linspline.png quadspline.png
+all: linear.png quadratic.png cubic.png
 
-linear.out quad.out: main *.in
+linear.out quad.out cubic.out: main *.in
 	./main
 	
-main: main.o lspline.o qspline.o
+main: main.o lspline.o qspline.o cspline.o
 
-linspline.png: linear.out Makefile
+linear.png: linear.out Makefile
 	echo '\
 	set terminal png;\
 	set output "$@";\
+	set title "Linear spline through points";\
 	set key top left;\
 	set tics out;\
 	set xlabel "x";\
@@ -23,12 +26,15 @@ linspline.png: linear.out Makefile
 	plot \
 	 "$<" using 1:2 with line color red title "Linear spline through points",\
 	 "$<" using 1:3 with line color black title "integrated spline",\
+	 "$<" using 1:4 with line color red title "gsl linear spline",\
+	 "$<" using 1:5 with line color black title "gsl integrated",\
 	 "lpoints.in" every ::1 using 1:2 with points title "points"\
 	' | pyxplot
-quadspline.png: quad.out Makefile
+quadratic.png: quad.out Makefile
 	echo '\
 	set terminal png;\
 	set output "$@";\
+	set title "Quadratic spline through points";\
 	set key top left;\
 	set tics out;\
 	set xlabel "x";\
@@ -40,6 +46,23 @@ quadspline.png: quad.out Makefile
 	 "$<" using 1:3 with line color black title "derivative",\
 	 "$<" using 1:4 with line color green title "integrated",\
 	 "qpoints.in" every ::1 using 1:2 with points title "points"\
+	' | pyxplot
+	
+cubic.png: cubic.out Makefile
+	echo '\
+	set terminal png;\
+	set output "$@";\
+	set title "Cubic spline through points";\
+	set key top left;\
+	set tics out;\
+	set xlabel "x";\
+	set ylabel "y";\
+	set xrange [0:20];\
+	set yrange [-3:30];\
+	plot \
+	 "$<" index 0 using 1:2 with points title "",\
+	 "$<" index 1 using 1:2 with line color black title "$$ f(x) = x + 10\sin^5(2x/\pi) $$",\
+	 "$<" index 1 using 1:3 with line color red title "Cubic spline"\
 	' | pyxplot
 clean:
 	$(RM) *.out *.o main *.png
