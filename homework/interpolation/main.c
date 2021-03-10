@@ -2,74 +2,77 @@
 #include<math.h>
 #include<assert.h>
 #include<stdlib.h>
+#include"spline.h"
 
-double linterp(int n, double *x, double *y, double z){
-    assert(n > 1 && z >= x[0] && z<=x[n-1]);
-    int i =0, j=n-1; 
-    while(j-i>1){ //Binary search
-        int m = (i+j)/2;
-        if(z>x[m]){
-            i=m;
-        } else {
-            j=m;
-        }
-    }
-    return y[i] + (y[i+1]-y[i])/(x[i+1]-x[i])*(z-x[i]);
-}
-double linterp_integ(int n, double *x, double *y, double z){
-    double sum = 0;
+void read_points(FILE *in_stream, int *n, double **xs, double **ys){
+    int cread = fscanf(in_stream, "%d", n);
+    assert(cread>0);
+    assert(*n > 1);
+    fprintf(stderr, "readpoints: %d\n", *n);
     
-    int i =0, j=n-1; 
-    while(j-i>1){ //Binary search
-        int m = (i+j)/2;
-        if(z>x[m]){
-            i=m;
-        } else {
-            j=m;
-        }
+    *xs = (double*)malloc((*n)*sizeof(double));
+    *ys = (double*)malloc((*n)*sizeof(double));
+    
+    double x, y;
+    int i = 0;
+    while(fscanf(in_stream, "%lg %lg", &x, &y) > 0){
+        assert(i<*n);        
+        (*xs)[i] = x;
+        (*ys)[i] = y;
+        i++;
     }
-    //Add up squares plus triangles under graphs
-    for(int k = 0; k<i; k++){
-        sum += (x[k+1]-x[k])*y[k];
-        sum += 0.5 * (x[k+1]-x[k])*(y[k+1]-y[k]);
-    }
-    double spline_y = y[i] + (y[i+1]-y[i])/(x[i+1]-x[i])*(z-x[i]);
-    sum += (z-x[i])*y[i];
-    sum += 0.5 * (z-x[i])*(spline_y-y[i]);
-    return sum;
+    assert(i==*n);
 }
 
 int main(){
-    FILE *output = fopen("linear.out", "w");
-    FILE *input = fopen("points.in", "r");
-    
-    int npoints;
-    int ret = fscanf(input, "%d", &npoints);
-    assert(ret>0);
-    assert(npoints > 1);
-    
-    double *xs = calloc(npoints, sizeof(double));
-    double *ys = calloc(npoints, sizeof(double));    
-    double x, y;
-    int i = 0;
-    while(fscanf(input, "%lg %lg", &x, &y) > 0){
-        assert(i<npoints);
-        fprintf(stderr, "%g %g\n", x, y);
-        xs[i] = x;
-        ys[i] = y;
-        i++;
-    }
-    
     int N_eval = 200;
+    
+    //LINEAR SPLINE
+    FILE *linput = fopen("lpoints.in", "r");
+    FILE *loutput = fopen("linear.out", "w");
+    //Parse data from file
+    int l_npoints;
+    double *xs, *ys;
+    read_points(linput, &l_npoints, &xs, &ys);
+    
+    //Evaluation of spline
     for(int i = 0; i<N_eval+1; i++){
-        double z = xs[0] + (xs[npoints-1]-xs[0])/N_eval*i;
-        double liny = linterp(npoints, xs, ys, z);
-        double integrated = linterp_integ(npoints, xs, ys, z);
-        fprintf(output, "%g %g %g\n", z, liny, integrated);
+        double z = xs[0] + (xs[l_npoints-1]-xs[0])/N_eval*i;
+        double spline_y = linterp(l_npoints, xs, ys, z);
+        double integrated = linterp_integ(l_npoints, xs, ys, z);
+        fprintf(loutput, "%g %g %g\n", z, spline_y, integrated);
     }
-    fclose(output);
-    fclose(input);
+    fclose(linput);
+    fclose(loutput);
     free(xs);
     free(ys);
+    
+    //QUADRATIC SPLINE
+    FILE *qinput = fopen("qpoints.in", "r");
+    FILE *qoutput = fopen("quad.out", "w");
+    FILE *q_coef_out = fopen("qcoef.out", "w");
+    //Parse data from file
+    int q_n;
+    read_points(qinput, &q_n, &xs, &ys);
+    qspline *s = qspline_init(q_n, xs, ys);
+        
+    for(int i = 0; i<N_eval+1; i++){
+        double z = xs[0] + (xs[q_n-1]-xs[0])/N_eval*i;
+        double spline_y = qspline_eval(s, z);
+        double derivative = qspline_deriv(s, z);
+        fprintf(qoutput, "%g %g %g\n", z, spline_y, derivative);
+    }
+    for(int i = 0; i<q_n-1; i++){ 
+        fprintf(q_coef_out, "c%d = %g\n", i, s->c[i]);
+        fprintf(q_coef_out, "b%d = %g\n", i, s->b[i]);  
+    }
+    
+    qspline_free(s);
+    fclose(qinput);
+    fclose(qoutput);
+    fclose(q_coef_out);
+    free(xs);
+    free(ys);
+    
     return 0;
 }
