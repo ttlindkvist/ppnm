@@ -3,9 +3,14 @@ CFLAGS += $(shell gsl-config --cflags)
 LDLIBS = -lm
 LDLIBS += $(shell gsl-config --libs)
 
+FIGDIR = figs
+OBJDIR = obj
+
 .PHONEY: all clean
 
 all: linear.png quadratic.png cubic.png
+	mkdir -p $(FIGDIR)
+	mv $^ $(FIGDIR)/
 
 linear.out quad.out cubic.out: main *.in
 	./main
@@ -64,5 +69,6 @@ cubic.png: cubic.out Makefile
 	 "$<" index 1 using 1:2 with line color black title "$$ f(x) = x + 10\sin^5(2x/\pi) $$",\
 	 "$<" index 1 using 1:3 with line color red title "Cubic spline"\
 	' | pyxplot
+	
 clean:
-	$(RM) *.out *.o main *.png
+	$(RM) *.out *.o main $(FIGDIR)/*.png
