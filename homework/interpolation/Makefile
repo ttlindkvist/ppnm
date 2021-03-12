@@ -4,7 +4,6 @@ LDLIBS = -lm
 LDLIBS += $(shell gsl-config --libs)
 
 FIGDIR = figs
-OBJDIR = obj
 
 .PHONEY: all clean
 
@@ -58,16 +57,23 @@ cubic.png: cubic.out Makefile
 	set terminal png;\
 	set output "$@";\
 	set title "Cubic spline through points";\
-	set key top left;\
+	set key outside;\
 	set tics out;\
 	set xlabel "x";\
 	set ylabel "y";\
 	set xrange [0:20];\
-	set yrange [-3:30];\
+	set yrange [-3:10];\
 	plot \
 	 "$<" index 0 using 1:2 with points title "",\
-	 "$<" index 1 using 1:2 with line color black title "$$ f(x) = x + 10\sin^5(2x/\pi) $$",\
-	 "$<" index 1 using 1:3 with line color red title "Cubic spline"\
+	 "$<" index 2 using 1:2 with line color black title "$$ f(x) $$",\
+	 "$<" index 2 using 1:3 with line lt 5 color black title "$$ f^\prime(x) $$",\
+	 "$<" index 2 using 1:4 with line lt 9 color black title "$$ \int_0^x f(x^\prime) dx^\prime $$",\
+	 "$<" index 1 using 1:2 with line color red title "Cubic spline",\
+	 "$<" index 1 using 1:3 with line color green title "spline derivative",\
+	 "$<" index 1 using 1:4 with line color blue title "spline integ",\
+	 "$<" index 3 using 1:2 with line lt 2 lw 2 color red title "gsl-spline",\
+	 "$<" index 3 using 1:3 with line lt 2 lw 2 color green title "gsl derivative",\
+	 "$<" index 3 using 1:4 with line lt 2 lw 2 color blue title "gsl integ"\
 	' | pyxplot
 	
 clean:

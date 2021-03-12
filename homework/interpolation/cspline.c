@@ -89,5 +89,28 @@ double cspline_deriv(cspline *s, double z){
     return s->b[i] + 2*s->c[i]*h + 3*s->d[i]*h*h;
 }
 double cspline_integ(cspline *s, double z){
-    return 0;
+    assert(z>= s->x[0] && z<=s->x[s->n-1]);
+    //Binary search
+    int i =0, j=s->n-1; 
+    while(j-i>1){ //Binary search
+        int m = (i+j)/2;
+        if(z>s->x[m]){
+            i=m;
+        } else {
+            j=m;
+        }
+    }
+    double sum = 0;
+    for(int k = 0; k<=i; k++){
+        double dx = s->x[k+1] - s->x[k];
+        if(k==i){
+            dx = z-s->x[i];
+        }
+        sum += s->y[k]*dx;
+        sum += 0.5*s->b[k]*dx*dx;
+        sum += 1./3*s->c[k]*dx*dx*dx;
+        sum += 1./4*s->d[k]*dx*dx*dx*dx;
+    }
+    
+    return sum;
 }

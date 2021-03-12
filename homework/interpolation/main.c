@@ -4,6 +4,7 @@
 #include<stdlib.h>
 #include"spline.h"
 #include<gsl/gsl_interp.h>
+#include<gsl/gsl_spline.h>
 
 //Read points from file open in FILE* in_stream
 void read_points(FILE *in_stream, int *n, double **xs, double **ys){
@@ -86,14 +87,15 @@ int main(){
     //C: CUBIC SPLINE
     FILE *coutput = fopen("cubic.out", "w");
     //Define points from function
-    int c_n = 20;
+    int c_n = 11;
     xs = malloc(c_n*sizeof(double));
     ys = malloc(c_n*sizeof(double));
     
     fprintf(coutput, "#index 0 - points\n");
     for(int i = 0; i<c_n; i++){
-        xs[i] = i;
-        ys[i] = i + 10.*pow(sin(2.*i/M_PI), 5);
+        double z = 2.*i;
+        xs[i] = z;
+        ys[i] = 0.5*(1 + 2*cos(z/M_PI) - cos(2*z/M_PI) - sin(4*z/M_PI)); //1/2 (1 + 2 cos(x) - cos(2 x))
         fprintf(coutput, "%g %g\n", xs[i], ys[i]);
     }
     //Init cubic spline
@@ -102,13 +104,34 @@ int main(){
     fprintf(coutput, "\n\n#index 1 - interpolation\n");
     for(int i = 0; i<N_eval; i++){
         double z = xs[0] + (xs[c_n-1]-xs[0])/N_eval*i;
-        double func = z + 10.*pow(sin(2.*z/M_PI), 5);
-        fprintf(stderr, "test %d\n", i);
         double spline_y = cspline_eval(cs, z);
+        double derivative = cspline_deriv(cs, z);
+        double integral = cspline_integ(cs, z);
         
-        fprintf(coutput, "%g %g %g\n", z, func, spline_y);
+        fprintf(coutput, "%g %g %g %g\n", z, spline_y, derivative, integral);
+    }
+    fprintf(coutput, "\n\n#index 2 - function values\n");
+    for(int i = 0; i<N_eval; i++){
+        double z = xs[0] + (xs[c_n-1]-xs[0])/N_eval*i;
+        double func = 0.5*(1 + 2*cos(z/M_PI) - cos(2*z/M_PI) -sin(4*z/M_PI));
+        double func_diff = (-sin(z/M_PI) + sin(2*z/M_PI) - 2*cos(4*z/M_PI))/M_PI;
+        double func_integ = (4*z + 8*M_PI*sin(z/M_PI)-2*M_PI*sin(2*z/M_PI)+M_PI*cos(4*z/M_PI))/8.;
+        
+        fprintf(coutput, "%g %g %g %g\n", z, func, func_diff, func_integ);
     }
     
+    gsl_spline *cubic_spline_gsl = gsl_spline_alloc(gsl_interp_cspline, c_n);
+    gsl_spline_init(cubic_spline_gsl, xs, ys, c_n);
+    fprintf(coutput, "\n\n#index 3 - gsl cubic spline\n");
+    for(int i = 0; i<N_eval; i++){
+        double z = xs[0] + (xs[c_n-1]-xs[0])/N_eval*i;
+        double spline_y = gsl_spline_eval(cubic_spline_gsl, z, NULL);
+        double derivative = gsl_spline_eval_deriv(cubic_spline_gsl, z, NULL);
+        double integ = gsl_spline_eval_integ(cubic_spline_gsl, 0, z, NULL);
+        fprintf(coutput, "%g %g %g %g\n", z, spline_y, derivative, integ);
+    }
+    
+    gsl_spline_free(cubic_spline_gsl);
     cspline_free(cs);
     fclose(coutput);
     free(xs);

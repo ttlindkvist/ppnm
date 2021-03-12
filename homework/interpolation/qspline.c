@@ -79,17 +79,20 @@ double qspline_integ(qspline *s, double z){
         }
     }
     double sum = 0;
-    for(int k = 0; k<i; k++){
-        double delta_x = s->x[k+1]-s->x[k];
-        sum += s->y[k]*delta_x;
-        sum += 0.5 * s->b[k]*delta_x*delta_x;
-        sum += 1./3 * s->c[k]*delta_x*delta_x*delta_x;
+    for(int k = 0; k<=i; k++){
+        double dx = s->x[k+1]-s->x[k];
+        if(k==i){
+            dx = z-s->x[i];
+        }
+        sum += s->y[k]*dx;
+        sum += 0.5 * s->b[k]*dx*dx;
+        sum += 1./3 * s->c[k]*dx*dx*dx;
     }
     
-    double h = z-s->x[i];
-    sum += h*s->y[i];
-    sum += 0.5 * s->b[i]*h*h;
-    sum += 1./3 * s->c[i]*h*h*h;
+    // double h = z-s->x[i];
+    // sum += h*s->y[i];
+    // sum += 0.5 * s->b[i]*h*h;
+    // sum += 1./3 * s->c[i]*h*h*h;
     return sum;
 }
 void qspline_free(qspline *s){
