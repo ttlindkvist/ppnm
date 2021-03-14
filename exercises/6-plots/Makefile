@@ -3,7 +3,7 @@ CFLAGS = $(shell gsl-config --cflags)
 LDLIBS = $(shell gsl-config --libs)
 .PHONEY: all clean
 
-all: erf.gnuplot.png erf.pyxplot.png gamma.pyxplot.png gamma.gnuplot.png lgamma.pyxplot.png lgamma.gnuplot.png cgamma.pyxplot.png
+all: erf.gnuplot.png erf.pyxplot.png gamma.pyxplot.png gamma.gnuplot.png lgamma.pyxplot.png lgamma.gnuplot.png cgamma.gnuplot.png
 
 erf.pyxplot.png: erf.dat Makefile tabulated.erf.txt
 	echo '\
@@ -56,22 +56,31 @@ lgamma.pyxplot.png: lgamma.dat Makefile
 	"$<" using 1:4 with line title "homemade LGamma"\
 	' | tee lgamma.plot.gpi | pyxplot
 
-cgamma.pyxplot.png: cgamma.dat Makefile
-	echo '\
-	set terminal png;\
-	set output "$@";\
-	set size 8 square;\
-	set grid;\
-	set view -30,30;\
-	set xlabel "$$\mathcal{R}(z)$$";\
-	set ylabel "$$\mathcal{I}(z)$$";\
-	set zrange [0:6];\
-	set samples grid 50x50;\
-	set title "Complex Gamma Function";\
-	plot 3d\
-	"$<" using 1:2:3 with surface col black\
-	 fillcol tealBlue title "$$|\Gamma(z)|$$"\
-	' | pyxplot
+cgamma.gnuplot.png: cgamma.gpi cgamma.dat 
+	gnuplot $<
+
+cgamma.gpi: Makefile
+	>$@
+	echo 'set term png size 1280,960 \' >> $@
+	echo 'font arial 28 background rgb "white"' >> $@
+	echo 'set out "cgamma.gnuplot.png"'  >> $@
+	echo 'set view ,310' >>$@
+	echo 'set title "|Γ(z)|"' >>$@
+	echo 'set hidden3d' >>$@
+	echo 'set pm3d' >>$@
+	echo 'set grid' >>$@
+	echo 'set xlabel "Re(z)"' >>$@
+	echo 'set ylabel "Im(z)"' >>$@
+	echo '#set zlabel "|Gamma(z)|" rotate parallel' >>$@
+	echo 'set contour both' >>$@
+	echo 'set cntrlabel onecolor' >>$@
+	echo 'set linetype 1 linecolor rgb "black"' >>$@
+	echo 'zmax=6' >>$@
+	echo 'set cntrparam levels incremental 0.0,0.25,zmax' >>$@
+	echo 'set palette rgb 33,13,10' >>$@
+	echo 'cut(z)=z>zmax?zmax:z' >>$@
+	echo 'splot [][][:zmax]\' >>$@
+	echo ' "cgamma.dat" using 1:2:(cut($$3)) with lines notitle' >> $@
 
 erf.plot.gpi: erf.pyxplot.png
 gamma.plot.gpi: gamma.pyxplot.png
