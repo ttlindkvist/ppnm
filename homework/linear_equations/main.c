@@ -348,7 +348,7 @@ int main(){
         
         
         start = clock();
-        gsl_linalg_QR_decomp(A, tau);
+        gsl_linalg_QR_decomp(A_copy, tau);
         int msec_gsl = (clock()-start) * 1000. / CLOCKS_PER_SEC;
         
         
