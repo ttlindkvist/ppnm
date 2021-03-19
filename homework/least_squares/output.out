@@ -1,0 +1,19 @@
+
+Loading datapoints from data.in
+
+Fit data to ln(y) = c_0 + c_1*x => y = exp(c_0)*exp(c_1*x) = a*exp(-gamma*x)
+Coefficient vector c
+ 4.9586687 -0.1713794 
+
+This gives the function: f(x) = 142.404*exp(-0.171379*x)
+
+Covariance matrix S
+ 0.0008903 -0.0000875 
+-0.0000875  0.0000125 
+
+This gives an activity @ time 0: a = 142.404 +- 4.24899
+And gamma = 0.171379 +- 0.00353553
+Which gives a half-life of (4.04452 +- 0.0834378) d
+Half-life for 224Ra = 3.63 d
+Which is not terribly far away from our fitted value.
+However it still outside the estimated uncertainty.

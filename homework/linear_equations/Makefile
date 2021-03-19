@@ -28,7 +28,7 @@ result.out timing.out: main
 	@echo "This may take a while..."
 	./$< > result.out
 
-main: main.o
+main: main.o matrix.o matrix.h
 
 clean:
 	$(RM) main *.o *.out *.png
