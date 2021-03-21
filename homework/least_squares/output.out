@@ -11,9 +11,10 @@ Covariance matrix S
  0.0008903 -0.0000875 
 -0.0000875  0.0000125 
 
-This gives an activity @ time 0: a = 142.404 +- 4.24899
+This gives a relative activity @ time 0: a = 142.404 +- 4.24899
 And gamma = 0.171379 +- 0.00353553
 Which gives a half-life of (4.04452 +- 0.0834378) d
 Half-life for 224Ra = 3.63 d
 Which is not terribly far away from our fitted value.
 However it still outside the estimated uncertainty.
+As seen from the figure fig_plot.png, a few points lie outside the range specified by (c+-delta c), but most lie inside.

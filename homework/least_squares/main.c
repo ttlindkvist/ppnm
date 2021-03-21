@@ -102,7 +102,7 @@ int main(){
     printf("\nCovariance matrix S\n");
     print_matrix(S);
     
-    printf("\nThis gives an activity @ time 0: a = %g +- %g\n", a, a_err);
+    printf("\nThis gives a relative activity @ time 0: a = %g +- %g\n", a, a_err);
     printf("And gamma = %g +- %g\n", g, g_err);
     printf("Which gives a half-life of (%g +- %g) d\n", log(2)/g, log(2)/(g*g)*g_err);
     printf("Half-life for 224Ra = 3.63 d\nWhich is not terribly far away from our fitted value.\nHowever it still outside the estimated uncertainty.\n");
@@ -112,7 +112,24 @@ int main(){
     free(ys);
     
     //Make output file for plotting
-    // int N = 1000;
-    
+    FILE *output = fopen("fit.out", "w");
+    int N = 1000;
+    fprintf(output, "#index 0 - best fit\n");
+    for(int i = 0; i<N; i++){
+        double x = 16./N * i;
+        fprintf(output, "%g %g\n", x, a*exp(-g*x));
+    }
+    fprintf(output, "\n\n#index 1 - fit + deltac\n");
+    for(int i = 0; i<N; i++){
+        double x = 16./N * i;
+        fprintf(output, "%g %g\n", x, (a+a_err)*exp(-(g+g_err)*x));
+    }
+    fprintf(output, "\n\n#index 2 - fit - deltac\n");
+    for(int i = 0; i<N; i++){
+        double x = 16./N * i;
+        fprintf(output, "%g %g\n", x, (a-a_err)*exp(-(g-g_err)*x));
+    }
+    fclose(output);
+    printf("As seen from the figure fig_plot.png, a few points lie outside the range specified by (c+-delta c), but most lie inside.\n");
     return 0;
 }
