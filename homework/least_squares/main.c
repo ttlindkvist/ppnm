@@ -122,12 +122,12 @@ int main(){
     fprintf(output, "\n\n#index 1 - fit + deltac\n");
     for(int i = 0; i<N; i++){
         double x = 16./N * i;
-        fprintf(output, "%g %g\n", x, (a+a_err)*exp(-(g+g_err)*x));
+        fprintf(output, "%g %g\n", x, (a+a_err)*exp(-(g-g_err)*x));
     }
     fprintf(output, "\n\n#index 2 - fit - deltac\n");
     for(int i = 0; i<N; i++){
         double x = 16./N * i;
-        fprintf(output, "%g %g\n", x, (a-a_err)*exp(-(g-g_err)*x));
+        fprintf(output, "%g %g\n", x, (a-a_err)*exp(-(g+g_err)*x));
     }
     fclose(output);
     printf("As seen from the figure fig_plot.png, a few points lie outside the range specified by (c+-delta c), but most lie inside.\n");

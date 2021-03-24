@@ -175,8 +175,8 @@ int main(){
     printf("\n\n------------- PART C  -------------\n\nTiming output sent to timing.out\n");
     FILE *toutput = fopen("timing.out", "w");
     
-    for(int i = 0; i<51; i++){
-        int n = 10*i + 1;
+    for(int i = 20; i<=80; i++){
+        int n = 10*i;
         gsl_matrix *A = gsl_matrix_alloc(n, n);
         gsl_matrix *R = gsl_matrix_alloc(n, n);
         gsl_matrix *A_copy = gsl_matrix_alloc(n,n);
@@ -187,15 +187,17 @@ int main(){
         
         clock_t start = clock();
         GS_decomp(A, R);
-        int msec_my_algo = (clock()-start) * 1000. / CLOCKS_PER_SEC;
+        clock_t end = clock();
+        int msec_my_algo = (double)(end-start) * 1000. / CLOCKS_PER_SEC;
         
         
         start = clock();
         gsl_linalg_QR_decomp(A_copy, tau);
-        int msec_gsl = (clock()-start) * 1000. / CLOCKS_PER_SEC;
+        end = clock();
+        int msec_gsl = (double)(end-start) * 1000. / CLOCKS_PER_SEC;
         
         
-        fprintf(toutput, "%d %d %d %d\n", n, msec_my_algo, msec_gsl, n*n*n);
+        fprintf(toutput, "%i %d %d\n", n, msec_my_algo, msec_gsl);
         
         gsl_matrix_free(A);
         gsl_matrix_free(A_copy);

@@ -21,8 +21,8 @@ fit_plot.png: fit.out data.in Makefile
 	set yrange [9:143];\
 	plot \
 	 "$<" index 0 using 1:2 with line color blue title "Best fit",\
-	 "$<" index 1 using 1:2 with line color green title "$$c+\delta c$$",\
-	 "$<" index 2 using 1:2 with line color red title "$$c-\delta c$$",\
+	 "$<" index 1 using 1:2 with line color green title "$$a+\delta a, \lambda-\delta\lambda$$",\
+	 "$<" index 2 using 1:2 with line color red title "$$a-\delta a, \lambda+\delta\lambda$$",\
 	 "data.in" every ::1 using 1:2:($$2/20.0) with errorbars title "Data"\
 	' | pyxplot
 
