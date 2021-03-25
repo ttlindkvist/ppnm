@@ -35,33 +35,38 @@ void Jtimes(gsl_matrix *A, int p, int q, double theta){
         gsl_matrix_set(A, q, j, -s*Apj + c*Aqj);
     }
 }
+double sum_off_diagonal(gsl_matrix *A){
+    int n = A->size1;
+    double sum=0;
+    for(int i = 0; i<n; i++){
+        for(int j = i+1; j<n; j++){
+            sum += fabs(gsl_matrix_get(A, i, j));
+        }
+    }
+    return sum;
+}
 void jacobi_diag(gsl_matrix *A, gsl_matrix *V){
     assert(A->size1 == A->size2);
     int n = A->size1;
-    int changes = 0;
+    // int changes = 0;
     
     //Initialize V to identity matrix
     gsl_matrix_set_identity(V);
 
-    //Sweep over upper triangle of A untill rotation doesn't change anything
+    //Sweep until sum of off-diagonal elements are smaller than some eps=double machine epsilon
     do{
         for(int p = 0; p<n-1; p++){
             for(int q = p+1; q<n; q++){
-                //Check diagonal elements
+                
                 double Apq = gsl_matrix_get(A, p, q);
                 double App = gsl_matrix_get(A, p, p);
                 double Aqq = gsl_matrix_get(A, q, q);
-                double theta = 0.3*atan2(2*Apq, Aqq-App);
-                double c = cos(theta), s = sin(theta);
-                double new_App = c*c*App - 2*s*c*Apq + s*s*Aqq;
-                double new_Aqq = s*s*App + 2*s*c*Apq + c*c*Aqq;
-                if(equals(new_App, App, 1e-7, 1e-7)==0 || equals(new_Aqq, Aqq, 1e-7, 1e-7)==0){
-                    changes++;
-                    timesJ(A, p, q, theta);
-                    Jtimes(A, p, q, -theta);
-                    timesJ(V, p, q, theta);
-                }
+                double theta = 0.5*atan2(2*Apq, Aqq-App);
+                
+                timesJ(A, p, q, theta);
+                Jtimes(A, p, q, -theta);
+                timesJ(V, p, q, theta);
             }
         }
-    } while(changes > 0);
+    } while(sum_off_diagonal(A)>__DBL_EPSILON__);
 }
