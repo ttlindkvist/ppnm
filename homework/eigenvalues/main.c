@@ -1,11 +1,11 @@
 #include"matrix.h"
 #include<gsl/gsl_blas.h>
+#include<gsl/gsl_eigen.h>
 #include<math.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include<assert.h>
 #include<time.h>
-
 
 int checkDiagonal(gsl_matrix *A){
     assert(A->size1 == A->size2);
@@ -13,7 +13,8 @@ int checkDiagonal(gsl_matrix *A){
     //We know that A is symmetric - only check upper triangle
     for(int i = 0; i<n; i++){
         for(int j = i+1; j<n; j++){
-            if(equals(gsl_matrix_get(A, i, j), 0, 1e-7, 1e-7) == 0){
+            // Quite large epsilon, but we know that further rotation doesn't change the diagonal/calculated eigenvalues
+            if(equals(gsl_matrix_get(A, i, j), 0, 1e-6, 1e-6) == 0){
                 printf("Non-zeroed element (%d,%d) is in fact: %g\n", i, j, gsl_matrix_get(A, i, j));
                 return 0;
             }
@@ -131,7 +132,9 @@ void partB(FILE *eigenfunc_out){
 }
 int main(){
     srand(time(NULL));
-    printf("------------- PART A -------------\n\nUsing sum of off-diagonal elements as convergence criteria as this seems to give higher precision\n\n");
+    printf("------------- PART A -------------\n\n");
+    printf("Using non-chaninging diagonal as convergence-criteria\n\n");
+    fprintf(stderr, "Running part A\n");
     testA(5, 1);
     
     printf("\nPerforming tests on part A - with n=[100, 300]\n");
@@ -146,7 +149,55 @@ int main(){
     FILE *eigenfunc_out = fopen("eigenfunc.out", "w");
     fprintf(stderr, "Running part B\n");
     partB(eigenfunc_out);
-    fprintf(stderr, "finished\n");
     fclose(eigenfunc_out);
+    
+    printf("\n\n------------- PART C -------------\n\n");
+    fprintf(stderr, "Running part C\n");
+    //Time my implementation vs gsl's
+    FILE *timing_out = fopen("timing.out", "w");
+    for(int i = 1; i<=20; i++){
+        int n = i*10;
+        
+        
+        gsl_matrix *A = gsl_matrix_alloc(n, n);
+        gsl_matrix *A_copy = gsl_matrix_alloc(n, n);
+        gsl_matrix *A_copy2 = gsl_matrix_alloc(n, n);
+        gsl_matrix *V = gsl_matrix_alloc(n, n);
+        
+        gen_rand_symm_matrix(A);
+        gsl_matrix_memcpy(A_copy, A);
+        gsl_matrix_memcpy(A_copy2, A);
+        
+        clock_t t = clock();
+        jacobi_diag(A, V);
+        double j_duration_ms = (double)(clock()-t)/1000.;
+        
+        t = clock();
+        jacobi_diag_sum(A_copy2, V, 1e-6);
+        double j_sum_duration_ms = (double)(clock()-t)/1000.;
+        
+        gsl_eigen_symmv_workspace *w = gsl_eigen_symmv_alloc(n); 
+        gsl_vector *eval = gsl_vector_alloc(n);
+        
+        t = clock();
+        gsl_eigen_symmv(A_copy, eval, V, w);
+        double gsl_duration_ms = (double)(clock() - t)/1000.;
+        
+        fprintf(timing_out, "%d %g %g %g\n", n, j_duration_ms, gsl_duration_ms, j_sum_duration_ms);
+        if(i%4==0){
+            fprintf(stderr, "Part C progress (%d/20)\n", i);            
+        }
+        gsl_matrix_free(A);
+        gsl_matrix_free(A_copy);
+        gsl_matrix_free(V);
+        
+        gsl_eigen_symmv_free(w);
+        gsl_vector_free(eval);
+    }
+    fclose(timing_out);
+    printf("Timing output to file timing.out - plots generated.\n");
+    printf("Plot of our Jacobi diagonalization in jacobi.timing.png, and gsl implementation in gsl.timing.png\n");
+    printf("As seen from the plots the gsl implementation is much faster\n");
+    //Optimize my implementation
     return 0;
 }

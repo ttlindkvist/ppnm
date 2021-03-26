@@ -50,7 +50,7 @@ On figure \ref{fig:1}, our implementation is plotted together with the implement
 	\caption{Shows the relative error of our implementation compared to the \textit{correct} implementation from \texttt{math.h}. Note: the y-axis is logarithmic.}
 	\label{fig:relative}
 \end{figure}
-We can also look at the difference between only calculating the positive terms, and also evaluating the Taylor series with negative terms. On figure \ref{fig:negative} the relative error of the two expressions, with respect to \texttt{exp} from \texttt{math.h}. These expressions are of course equal for positive $ x $, but at negative $ x $, the expression with the negative terms, is actually more precise.
+We can also look at the difference between only calculating the positive terms, and also evaluating the Taylor series with negative terms. On figure \ref{fig:negative} the relative error of the two expressions, with respect to \texttt{exp} from \texttt{math.h}. These expressions are of course equal for positive $ x $, but at negative $ x $, the expression with the negative terms, deviates slightly from the one with positive terms.
 \begin{figure}[h]
 	\includegraphics{plot3.png}
 	\caption{Shows the relative error of our implementation with and without evaluation of negative terms.}
