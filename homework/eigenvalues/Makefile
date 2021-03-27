@@ -43,11 +43,16 @@ jacobi.timing.png: timing.out Makefile
 	b=1;\
 	g(x)=b*x**3;\
 	fit g(x) "$<" using 1:4 via b;\
+	c=1;\
+	h(x)=c*x**3;\
+	fit h(x) "$<" using 1:5 via c;\
 	plot \
 	 "$<" using 1:2 with points color red title "Unchanging diag as convergence criteria",\
+	 "$<" using 1:5 with points color black title "Only updating upper triangle on sweep",\
 	 "$<" using 1:4 with points color black title "Off-diag sum as convergence criteria",\
 	 f(x) with line lt 2 color black title "c1*N**3",\
-	 g(x) with line lt 2 color black title "c2*N**3"\
+	 g(x) with line lt 2 color black title "c2*N**3",\
+	 h(x) with line lt 2 color black title "c3*N**3"\
 	' | pyxplot
 gsl.timing.png: timing.out Makefile
 	echo '\

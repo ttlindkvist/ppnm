@@ -20,7 +20,7 @@ void gen_rand_symm_matrix(gsl_matrix *A);
 void timesJ(gsl_matrix *A, int p, int q, double theta);
 void Jtimes(gsl_matrix *A, int p, int q, double theta);
 int jacobi_diag(gsl_matrix *A, gsl_matrix *V);
-int jacobi_diag_opt(gsl_matrix *A, gsl_matrix *V);
 int jacobi_diag_sum(gsl_matrix *A, gsl_matrix *V, double tau);
+int jacobi_diag_opt(gsl_matrix *A, gsl_matrix *V);
 
 #endif

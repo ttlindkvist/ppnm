@@ -7,6 +7,8 @@
 #include<assert.h>
 #include<time.h>
 
+//Checks that the matrix A is diagnonal.
+//It is known that A is symmetric, so only upper triangle is checked
 int checkDiagonal(gsl_matrix *A){
     assert(A->size1 == A->size2);
     int n = A->size1;
@@ -136,7 +138,7 @@ int main(){
     printf("Using non-chaninging diagonal as convergence-criteria\n\n");
     fprintf(stderr, "Running part A\n");
     testA(5, 1);
-    
+
     printf("\nPerforming tests on part A - with n=[100, 300]\n");
     for(int i = 0; i<5; i++){
         int n = rand() % 201 + 100;
@@ -162,11 +164,13 @@ int main(){
         gsl_matrix *A = gsl_matrix_alloc(n, n);
         gsl_matrix *A_copy = gsl_matrix_alloc(n, n);
         gsl_matrix *A_copy2 = gsl_matrix_alloc(n, n);
+        gsl_matrix *A_copy3 = gsl_matrix_alloc(n, n);
         gsl_matrix *V = gsl_matrix_alloc(n, n);
         
         gen_rand_symm_matrix(A);
         gsl_matrix_memcpy(A_copy, A);
         gsl_matrix_memcpy(A_copy2, A);
+        gsl_matrix_memcpy(A_copy3, A);
         
         clock_t t = clock();
         jacobi_diag(A, V);
@@ -176,6 +180,10 @@ int main(){
         jacobi_diag_sum(A_copy2, V, 1e-6);
         double j_sum_duration_ms = (double)(clock()-t)/1000.;
         
+        t = clock();
+        jacobi_diag_opt(A_copy3, V);
+        double j_opt_duration_ms = (double)(clock()-t)/1000.;
+        
         gsl_eigen_symmv_workspace *w = gsl_eigen_symmv_alloc(n); 
         gsl_vector *eval = gsl_vector_alloc(n);
         
@@ -183,12 +191,14 @@ int main(){
         gsl_eigen_symmv(A_copy, eval, V, w);
         double gsl_duration_ms = (double)(clock() - t)/1000.;
         
-        fprintf(timing_out, "%d %g %g %g\n", n, j_duration_ms, gsl_duration_ms, j_sum_duration_ms);
+        fprintf(timing_out, "%d %g %g %g %g\n", n, j_duration_ms, gsl_duration_ms, j_sum_duration_ms, j_opt_duration_ms);
         if(i%4==0){
             fprintf(stderr, "Part C progress (%d/20)\n", i);            
         }
         gsl_matrix_free(A);
         gsl_matrix_free(A_copy);
+        gsl_matrix_free(A_copy2);
+        gsl_matrix_free(A_copy3);
         gsl_matrix_free(V);
         
         gsl_eigen_symmv_free(w);
