@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "gsl_vector.h": "c",
+        "stdio.h": "c"
+    }
+}
