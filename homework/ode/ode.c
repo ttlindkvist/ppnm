@@ -94,7 +94,7 @@ int driver(
 ){
     int step = 0; //Current index of evaluation
     gsl_vector *err = gsl_vector_alloc(ylist->size2);
-    gsl_matrix *Ks = gsl_matrix_alloc(N, ylist->size2);
+    gsl_matrix *Ks = gsl_matrix_calloc(N, ylist->size2);
     gsl_vector_view yt;
     gsl_vector_view yb;
     gsl_vector_set(xlist, 0, a);
@@ -122,6 +122,64 @@ int driver(
             x = x+h;
         }
         
+        //Update step-size
+        if(norme > 0){
+            h *= pow(tol/norme, 0.25)*0.95;
+        } else {h*=2;};
+        if(h>maxh) h=maxh;
+    }
+    gsl_vector_free(err);
+    gsl_matrix_free(Ks);
+    return step+1;
+}
+int debug_driver(
+	void (*f)(double,gsl_vector*,gsl_vector*), /* right-hand-side of dy/dt=f(t,y) */
+	double a,                     /* the start-point a */
+	double b,                     /* the end-point of the integration */
+	double h,                     /* initial step-size */
+    double maxh,
+	double acc,                   /* absolute accuracy goal */
+	double eps,                   /* relative accuracy goal */
+    gsl_matrix *ylist,            //Matrix of stored y values 
+    gsl_vector *xlist
+){
+    int step = 0; //Current index of evaluation
+    gsl_vector *err = gsl_vector_alloc(ylist->size2);
+    gsl_matrix *Ks = gsl_matrix_calloc(N, ylist->size2);
+    gsl_vector_view yt;
+    gsl_vector_view yb;
+    gsl_vector_set(xlist, 0, a);
+    double x = a;
+    while(x < b){
+        gsl_vector_set_all(err, 0);
+        yt = gsl_matrix_row(ylist, step);
+        yb = gsl_matrix_row(ylist, step+1);
+        if(x + h > b){
+            h = b - x;
+        }
+        fprintf(stderr, "test1\n");
+        
+        rkstep45(f, x, &yt.vector, h, &yb.vector, err, Ks);
+        
+        //Check if step is accepted
+        double norme = gsl_blas_dnrm2(err); //Error at step 
+        double normy = gsl_blas_dnrm2(&yb.vector); //Norm of yh
+        double tol = (normy*eps+acc)*sqrt(h/(b-a)); //Tolerance this step
+        fprintf(stderr, "test2\n");
+        
+        if(norme<tol){ // Step is accepted
+            step++;
+            fprintf(stderr, "test3 %d\n", step);
+            if(step > ylist->size1-2){ //If k grows larger than ylist matrix, make larger matrix
+                return -step; //For now return -step
+            }
+            
+            gsl_vector_set(xlist, step, x+h);
+            fprintf(stderr, "test12 %d\n", step);
+            
+            x = x+h;
+        }
+        fprintf(stderr, "test4\n");
         //Update step-size
         if(norme > 0){
             h *= pow(tol/norme, 0.25)*0.95;

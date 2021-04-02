@@ -1,0 +1,19 @@
+Simple harmonic motion as a test. u''=-u
+From 0 to 20 with max stepsize of 0.2
+Steps taken: 102
+
+
+SIR model
+(Tc, Tr) = (1, 7)
+Steps taken: 503
+
+(Tc, Tr) = (2, 7)
+Steps taken: 503
+
+(Tc, Tr) = (4, 7)
+Steps taken: 503
+
+
+NBODY - N=3 and equal masses
+Steps taken: 502
+

@@ -4,10 +4,11 @@ LDLIBS = $(shell gsl-config --libs)
 
 .PHONY: all clean
 
-all: SHM.png
+all: SHM.png SIR.png output.out nbody.png
+	cat output.out
 	
-SHM.out: main
-	./$<
+SHM.out SIR.out output.out nbody.out: main
+	./$< > output.out
 
 SHM.png: SHM.out Makefile
 	echo '\
@@ -19,12 +20,51 @@ SHM.png: SHM.out Makefile
 	set xlabel "t";\
 	set ylabel "x";\
 	set xrange [0:20];\
-	set yrange [-1.8:1.8];\
+	set yrange [-1.2:1.8];\
 	plot \
 	 "$<" using 1:2 with line color black title "position",\
 	 "$<" using 1:3 with line color red title "velocity"\
 	' | pyxplot
-
+	
+SIR.png: SIR.out Makefile
+	echo '\
+	set terminal png;\
+	set output "$@";\
+	set title "";\
+	set key outside;\
+	set tics out;\
+	set xlabel "t (days)";\
+	set ylabel "Population (\%)";\
+	set xrange [0:50];\
+	set yrange [0:1];\
+	plot \
+	 "$<" index 0 using 1:2 with line color black title "S",\
+	 "$<" index 0 using 1:3 with line color red title "I",\
+	 "$<" index 0 using 1:4 with line color green title "R",\
+	 "$<" index 1 using 1:2 with line lt 2 color black title "S",\
+	 "$<" index 1 using 1:3 with line lt 2 color red title "I",\
+	 "$<" index 1 using 1:4 with line lt 2 color green title "R",\
+	 "$<" index 2 using 1:2 with line lt 3 color black title "S",\
+	 "$<" index 2 using 1:3 with line lt 3 color red title "I",\
+	 "$<" index 2 using 1:4 with line lt 3 color green title "R"\
+	' | pyxplot
+	
+nbody.png: nbody.out Makefile
+	echo '\
+	set terminal png;\
+	set output "$@";\
+	set title "";\
+	set key top left;\
+	set tics out;\
+	set xlabel "y";\
+	set ylabel "x";\
+	set xrange [-2:2];\
+	set yrange [-2:2];\
+	plot \
+	 "$<" using 1:2 with line color black title "m1",\
+	 "$<" using 4:5 with line color red title "m2",\
+	 "$<" using 7:8 with line color green title "m3"\
+	' | pyxplot
 main: main.o ode.o ode.h matrix.c matrix.h
 
 clean:
