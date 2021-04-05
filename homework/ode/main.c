@@ -54,10 +54,11 @@ void func_nbody(double t, gsl_vector *y, gsl_vector *dydt){
             ai = gsl_vector_subvector(dydt, 3*n + 3*i, 3);
             aj = gsl_vector_subvector(dydt, 3*n + 3*j, 3);
             
-            double aij = ms[i]*ms[j]/(d*d*d);
-            gsl_vector_scale(rij, aij);
+            double Fij = ms[i]*ms[j]/(d*d*d);
             
+            gsl_vector_scale(rij, Fij/ms[i]);
             gsl_blas_daxpy(1, rij, &ai.vector);
+            gsl_vector_scale(rij, ms[i]/ms[j]);
             gsl_blas_daxpy(-1, rij, &aj.vector);
         }
     }
@@ -151,31 +152,22 @@ int main(){
     printf("\nNBODY - N=3 and equal masses\n");
     FILE *nbody_out = fopen("nbody.out", "w");
     n = 3;
-    double masses[3] = {1, 1, 1};
+    double m3[3] = {1, 1, 1};
     maxsteps = 1000; eqs = 3*n*2;
     
     ylist = gsl_matrix_calloc(maxsteps, eqs);
     xlist = gsl_vector_alloc(maxsteps);
     
     //Initial value
-    //Positions
-    gsl_matrix_set(ylist, 0, 0, -0.97000436);
-    gsl_matrix_set(ylist, 0, 1, 0.24308753);
-    gsl_matrix_set(ylist, 0, 3, 0);
-    gsl_matrix_set(ylist, 0, 4, 0);
-    gsl_matrix_set(ylist, 0, 6, 0.97000436);
-    gsl_matrix_set(ylist, 0, 7, -0.24308753);
-    //Velocities
-    gsl_matrix_set(ylist, 0, 3*n,   0.4662036850);
-    gsl_matrix_set(ylist, 0, 3*n+1, 0.4323657300);
-    gsl_matrix_set(ylist, 0, 3*n+3, -0.93240737);
-    gsl_matrix_set(ylist, 0, 3*n+4, -0.86473146);
-    gsl_matrix_set(ylist, 0, 3*n+6, 0.4662036850);
-    gsl_matrix_set(ylist, 0, 3*n+7, 0.4323657300);
+    double y0[] = {-0.97000436, 0.24308753, 0, 0, 0, 0, 0.97000436, -0.24308753, 0,\
+                    0.4662036850, 0.4323657300, 0, -0.93240737, -0.86473146, 0, 0.4662036850, 0.4323657300, 0};
+    gsl_vector_view y0_vec = gsl_vector_view_array(y0, 18);
+    gsl_vector_view y0_m = gsl_matrix_row(ylist, 0);
+    gsl_vector_memcpy(&y0_m.vector, &y0_vec.vector);
     
-    steps = driver(nbody_wrapper(n, masses), 0, 5, 1e-3, 0.01, 1e-9, 1e-9, ylist, xlist);
+    steps = driver(nbody_wrapper(n, m3), 0, 5, 1e-3, 0.01, 1e-9, 1e-9, ylist, xlist);
     printf("Steps taken: %d\n\n", steps);
-    
+    fprintf(nbody_out, "#index 0 - N=3 equal masses figure-8\n");
     for(int i = 0; i<abs(steps); i++){
         // fprintf(nbody_out, "%g ", gsl_vector_get(xlist, i));
         for(int j = 0; j<3*n; j++){
@@ -186,7 +178,6 @@ int main(){
     
     gsl_matrix_free(ylist);
     gsl_vector_free(xlist);
-    
     fclose(nbody_out);
     return 0;
 }

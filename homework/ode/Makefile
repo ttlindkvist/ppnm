@@ -4,7 +4,7 @@ LDLIBS = $(shell gsl-config --libs)
 
 .PHONY: all clean
 
-all: SHM.png SIR.png output.out nbody.png
+all: SHM.png SIR.png output.out 3body.png
 	cat output.out
 	
 SHM.out SIR.out output.out nbody.out: main
@@ -49,7 +49,7 @@ SIR.png: SIR.out Makefile
 	 "$<" index 2 using 1:4 with line lt 3 color green title "R"\
 	' | pyxplot
 	
-nbody.png: nbody.out Makefile
+3body.png: nbody.out Makefile
 	echo '\
 	set terminal png;\
 	set output "$@";\
@@ -61,10 +61,11 @@ nbody.png: nbody.out Makefile
 	set xrange [-2:2];\
 	set yrange [-2:2];\
 	plot \
-	 "$<" using 1:2 with line color black title "m1",\
-	 "$<" using 4:5 with line color red title "m2",\
-	 "$<" using 7:8 with line color green title "m3"\
+	 "$<" index 0 using 1:2 with line color black title "m1",\
+	 "$<" index 0 using 4:5 with line color red title "m2",\
+	 "$<" index 0 using 7:8 with line color green title "m3"\
 	' | pyxplot
+	
 main: main.o ode.o ode.h matrix.c matrix.h
 
 clean:
