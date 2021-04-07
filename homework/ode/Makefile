@@ -2,10 +2,16 @@ CFLAGS = -O -Wall -Werror
 CFLAGS += $(shell gsl-config --cflags)
 LDLIBS = $(shell gsl-config --libs)
 
-.PHONY: all clean
+.PHONY: all clean dyn_test
 
 all: SHM.png SIR.png output.out 3body.png
 	cat output.out
+
+
+dyn_test: dyn_matrix_test
+	./$<
+
+
 	
 SHM.out SIR.out output.out nbody.out: main
 	./$< > output.out
@@ -66,7 +72,8 @@ SIR.png: SIR.out Makefile
 	 "$<" index 0 using 7:8 with line color green title "m3"\
 	' | pyxplot
 	
-main: main.o ode.o ode.h matrix.c matrix.h
+main: main.o ode.c ode.h matrix.c matrix.h
+dyn_matrix_test: dyn_matrix_test.o dyn_matrix.c dyn_matrix.h
 
 clean:
-	$(RM) main *.o *.out *.png
+	$(RM) main *.o *.out *.png dyn_matrix_test
