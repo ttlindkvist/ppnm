@@ -3,6 +3,9 @@
 #include<gsl/gsl_vector.h>
 #include<gsl/gsl_matrix.h>
 #include<math.h>
+// #define TRACE fprintf
+#define TRACE(...)
+
 
 double a45[5][5] = {
     {1./4,  0, 0, 0, 0},
@@ -132,6 +135,68 @@ int driver(
     gsl_matrix_free(Ks);
     return step+1;
 }
+
+int driver_dyn_size(
+	void (*f)(double,gsl_vector*,gsl_vector*), /* right-hand-side of dy/dt=f(t,y) */
+	double a,                     /* the start-point a */
+	double b,                     /* the end-point of the integration */
+	double h,                     /* initial step-size */
+    double maxh,
+	double acc,                   /* absolute accuracy goal */
+	double eps,                   /* relative accuracy goal */
+    dyn_matrix *ylist,            //Matrix of stored y values 
+    dyn_vector *xlist
+){
+    int step = 0; //Current index of evaluation
+    gsl_vector *err = gsl_vector_alloc(ylist->n2);
+    gsl_matrix *Ks = gsl_matrix_calloc(N, ylist->n2);
+    gsl_vector_view yt;
+    gsl_vector_view yb;
+    dyn_vector_set(xlist, 0, a);
+    double x = a;
+    while(x < b){
+        TRACE(stderr, "ylist size: %d %d\n xlist size %d\n", ylist->n1, ylist->n2, xlist->n);
+        gsl_vector_set_all(err, 0);
+        
+        yt = dyn_matrix_row_view(ylist, step);
+        TRACE(stderr, "test1 yt size %d\n", yt.vector.size);
+        yb = dyn_matrix_row_view(ylist, step+1);
+        TRACE(stderr, "test2\n");
+        if(x + h > b){
+            h = b - x;
+        }
+        
+        rkstep45(f, x, &yt.vector, h, &yb.vector, err, Ks);
+        
+        //Check if step is accepted
+        TRACE(stderr, "test4\n");
+        double norme = gsl_blas_dnrm2(err); //Error at step 
+        TRACE(stderr, "test5\n");
+        double normy = gsl_blas_dnrm2(&yb.vector); //Norm of yh
+        double tol = (normy*eps+acc)*sqrt(h/(b-a)); //Tolerance this step
+        if(norme<tol){ // Step is accepted
+            step++;
+            
+            if(step > ylist->n1-2){ //If k grows larger than ylist matrix, make larger matrix
+                dyn_matrix_add_rows(ylist, 50);
+                dyn_vector_inc_size(xlist, 50);
+                TRACE(stderr, "test3\n");
+            }
+            dyn_vector_set(xlist, step, x+h);
+            x = x+h;
+        }
+        
+        //Update step-size
+        if(norme > 0){
+            h *= pow(tol/norme, 0.25)*0.95;
+        } else {h*=2;};
+        if(h>maxh) h=maxh;
+    }
+    gsl_vector_free(err);
+    gsl_matrix_free(Ks);
+    return step+1;
+}
+
 int debug_driver(
 	void (*f)(double,gsl_vector*,gsl_vector*), /* right-hand-side of dy/dt=f(t,y) */
 	double a,                     /* the start-point a */

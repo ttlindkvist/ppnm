@@ -72,7 +72,7 @@ SIR.png: SIR.out Makefile
 	 "$<" index 0 using 7:8 with line color green title "m3"\
 	' | pyxplot
 	
-main: main.o ode.c ode.h matrix.c matrix.h
+main: main.o ode.c ode.h matrix.c matrix.h dyn_matrix.c dyn_matrix.h
 dyn_matrix_test: dyn_matrix_test.o dyn_matrix.c dyn_matrix.h
 
 clean:

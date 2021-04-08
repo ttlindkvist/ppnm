@@ -3,6 +3,7 @@
 #include<gsl/gsl_blas.h>
 #include"ode.h"
 #include"matrix.h"
+#include"dyn_matrix.h"
 
 void func_shm(double t, gsl_vector *y, gsl_vector *dydt){
     // assert(y->size == dydt->size && y->size == 2);
@@ -76,74 +77,74 @@ void (*nbody_wrapper(int _n, double *_ms))(double, gsl_vector*,gsl_vector*){
 
 
 int main(){
-    // ------ SIMPLE HARMONIC MOTION ------ //
-    printf("Simple harmonic motion as a test. u''=-u\nFrom 0 to 20 with max stepsize of 0.2\n");
-    int maxsteps = 200, eqs = 2;
-    gsl_matrix *ylist = gsl_matrix_alloc(maxsteps, eqs);
-    gsl_vector *xlist = gsl_vector_alloc(maxsteps);
+    printf("------ SIMPLE HARMONIC MOTION ------\n");
+    printf("\nSimple harmonic motion as a test. u''=-u\nFrom 0 to 20 with max stepsize of 0.2\n");
+    int init_size = 2, eqs = 2;
+    dyn_matrix *ylist = dyn_matrix_alloc(init_size, eqs);
+    dyn_vector *xlist = dyn_vector_alloc(init_size);
     
     //Initial value
-    gsl_matrix_set(ylist, 0, 0, 1);
-    gsl_matrix_set(ylist, 0, 1, 0);
+    dyn_matrix_set(ylist, 0, 0, 1);
+    dyn_matrix_set(ylist, 0, 1, 0);
     
-    int steps = driver(func_shm, 0, 20, 0.001, 0.2, 1e-2, 1e-2, ylist, xlist);
-    printf("Steps taken: %d\n\n", steps);
+    int steps = driver_dyn_size(func_shm, 0, 20, 0.001, 0.2, 1e-2, 1e-2, ylist, xlist);
+    printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
     
     FILE *SHM_out = fopen("SHM.out", "w");
     for(int i = 0; i<abs(steps); i++){
-        gsl_vector_view yi = gsl_matrix_row(ylist, i);
-        fprintf(SHM_out, "%g %g %g\n", gsl_vector_get(xlist, i), gsl_vector_get(&yi.vector, 0), gsl_vector_get(&yi.vector, 1));
+        double *yi = dyn_matrix_row(ylist, i);
+        fprintf(SHM_out, "%g %g %g\n", dyn_vector_get(xlist, i), yi[0], yi[1]);
     }
-    gsl_matrix_free(ylist);
-    gsl_vector_free(xlist);
+    dyn_matrix_free(ylist);
+    dyn_vector_free(xlist);
     fclose(SHM_out);
     fprintf(stderr, "Simple harmonic motion done\n");
     
     // ------- SIR MODEL ------ //
     printf("\nSIR model\n");
     FILE *SIR_out = fopen("SIR.out", "w");
-    maxsteps = 1000; eqs = 3;
+    init_size = 200; eqs = 3;
     
-    ylist = gsl_matrix_alloc(maxsteps, eqs);
-    xlist = gsl_vector_alloc(maxsteps);
+    ylist = dyn_matrix_alloc(init_size, eqs);
+    xlist = dyn_vector_alloc(init_size);
     
     //Initial value
-    gsl_matrix_set(ylist, 0, 0, 1);
-    gsl_matrix_set(ylist, 0, 1, 1e-2);
-    gsl_matrix_set(ylist, 0, 2, 0);
+    dyn_matrix_set(ylist, 0, 0, 1);
+    dyn_matrix_set(ylist, 0, 1, 1e-2);
+    dyn_matrix_set(ylist, 0, 2, 0);
     
     printf("(Tc, Tr) = (1, 7)\n");
-    steps = driver(sir_wrapper(1, 7), 0, 100, 1e-7, 2e-1, 1e-4, 1e-4, ylist, xlist);
-    printf("Steps taken: %d\n\n", steps);
+    steps = driver_dyn_size(sir_wrapper(1, 7), 0, 100, 1e-7, 2e-1, 1e-4, 1e-4, ylist, xlist);
+    printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
     
     fprintf(SIR_out, "#index 0 - Tc=1, Tr=7\n");
     for(int i = 0; i<abs(steps); i++){
-        gsl_vector_view yi = gsl_matrix_row(ylist, i);
-        fprintf(SIR_out, "%g %g %g %g\n", gsl_vector_get(xlist, i), gsl_vector_get(&yi.vector, 0), gsl_vector_get(&yi.vector, 1), gsl_vector_get(&yi.vector, 2));
+        double *yi = dyn_matrix_row(ylist, i);
+        fprintf(SIR_out, "%g %g %g %g\n", dyn_vector_get(xlist, i), yi[0], yi[1], yi[2]);
     }
     
     printf("(Tc, Tr) = (2, 7)\n");
-    steps = driver(sir_wrapper(2, 7), 0, 100, 1e-7, 2e-1, 1e-4, 1e-4, ylist, xlist);
-    printf("Steps taken: %d\n\n", steps);
+    steps = driver_dyn_size(sir_wrapper(2, 7), 0, 100, 1e-7, 2e-1, 1e-4, 1e-4, ylist, xlist);
+    printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
     
     fprintf(SIR_out, "\n\n#index 1 - Tc=2, Tr=7\n");
     for(int i = 0; i<abs(steps); i++){
-        gsl_vector_view yi = gsl_matrix_row(ylist, i);
-        fprintf(SIR_out, "%g %g %g %g\n", gsl_vector_get(xlist, i), gsl_vector_get(&yi.vector, 0), gsl_vector_get(&yi.vector, 1), gsl_vector_get(&yi.vector, 2));
+        double *yi = dyn_matrix_row(ylist, i);
+        fprintf(SIR_out, "%g %g %g %g\n", dyn_vector_get(xlist, i), yi[0], yi[1], yi[2]);
     }
     
     printf("(Tc, Tr) = (4, 7)\n");
-    steps = driver(sir_wrapper(4, 7), 0, 100, 1e-7, 2e-1, 1e-4, 1e-4, ylist, xlist);
-    printf("Steps taken: %d\n\n", steps);
+    steps = driver_dyn_size(sir_wrapper(4, 7), 0, 100, 1e-7, 2e-1, 1e-4, 1e-4, ylist, xlist);
+    printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
     
     fprintf(SIR_out, "\n\n#index 2 - Tc=4, Tr=7\n");
     for(int i = 0; i<abs(steps); i++){
-        gsl_vector_view yi = gsl_matrix_row(ylist, i);
-        fprintf(SIR_out, "%g %g %g %g\n", gsl_vector_get(xlist, i), gsl_vector_get(&yi.vector, 0), gsl_vector_get(&yi.vector, 1), gsl_vector_get(&yi.vector, 2));
+        double *yi = dyn_matrix_row(ylist, i);
+        fprintf(SIR_out, "%g %g %g %g\n", dyn_vector_get(xlist, i), yi[0], yi[1], yi[2]);
     }
     
-    gsl_matrix_free(ylist);
-    gsl_vector_free(xlist);
+    dyn_matrix_free(ylist);
+    dyn_vector_free(xlist);
     
     fclose(SIR_out);
     fprintf(stderr, "Sir model done\n");
@@ -153,31 +154,31 @@ int main(){
     FILE *nbody_out = fopen("nbody.out", "w");
     n = 3;
     double m3[3] = {1, 1, 1};
-    maxsteps = 1000; eqs = 3*n*2;
+    init_size = 100; eqs = 3*n*2;
     
-    ylist = gsl_matrix_calloc(maxsteps, eqs);
-    xlist = gsl_vector_alloc(maxsteps);
+    ylist = dyn_matrix_alloc(init_size, eqs);
+    xlist = dyn_vector_alloc(init_size);
     
     //Initial value
     double y0[] = {-0.97000436, 0.24308753, 0, 0, 0, 0, 0.97000436, -0.24308753, 0,\
                     0.4662036850, 0.4323657300, 0, -0.93240737, -0.86473146, 0, 0.4662036850, 0.4323657300, 0};
     gsl_vector_view y0_vec = gsl_vector_view_array(y0, 18);
-    gsl_vector_view y0_m = gsl_matrix_row(ylist, 0);
+    gsl_vector_view y0_m = dyn_matrix_row_view(ylist, 0);
     gsl_vector_memcpy(&y0_m.vector, &y0_vec.vector);
     
-    steps = driver(nbody_wrapper(n, m3), 0, 5, 1e-3, 0.01, 1e-9, 1e-9, ylist, xlist);
-    printf("Steps taken: %d\n\n", steps);
+    steps = driver_dyn_size(nbody_wrapper(n, m3), 0, 20, 1e-3, 0.01, 1e-9, 1e-9, ylist, xlist);
+    printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
     fprintf(nbody_out, "#index 0 - N=3 equal masses figure-8\n");
     for(int i = 0; i<abs(steps); i++){
-        // fprintf(nbody_out, "%g ", gsl_vector_get(xlist, i));
+        double *yi = dyn_matrix_row(ylist, i);
         for(int j = 0; j<3*n; j++){
-            fprintf(nbody_out, "%g ", gsl_matrix_get(ylist, i, j));
+            fprintf(nbody_out, "%g ", yi[j]);
         }
         fprintf(nbody_out, "\n");
     }
     
-    gsl_matrix_free(ylist);
-    gsl_vector_free(xlist);
+    dyn_matrix_free(ylist);
+    dyn_vector_free(xlist);
     fclose(nbody_out);
     return 0;
 }
