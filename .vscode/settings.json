@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "gsl_vector.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "cmath": "c",
+        "complex": "c"
     }
 }

@@ -1,0 +1,12 @@
+int sqrt(x) from 0 to 1
+Calculated to 	0.6666669700
+Should be 	0.6666666667
+With error 	0.0000003034
+with 108 function evaluations
+
+int 4*sqrt(1-x*x) from 0 to 1
+Calculated to 	3.1415928364
+Should be 	3.1415926536
+With error 	0.0000001828
+with 228 function evaluations
+
