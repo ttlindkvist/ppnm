@@ -43,3 +43,16 @@ double adapt_quad24(double f(double), double a, double b, double abs, double eps
     double f3 = f(a + (b-a)*absc24[2]);
     return qag24(f, a, b, abs, eps, f2, f3, 0);    
 }
+
+double (*cc_func)(double);
+double cc_a,cc_b;
+double cc_wrapper(double x){
+    return cc_func((cc_a+cc_b)/2 + (cc_b-cc_a)*cos(x)/2)*(cc_b-cc_a)*sin(x)/2;
+}
+
+double adapt_clenshaw_curtis(double f(double), double a, double b, double abs, double eps){
+    cc_func = f;
+    cc_a = a;
+    cc_b = b;
+    return adapt_quad24(cc_wrapper, 0, M_PI, abs, eps);  
+}

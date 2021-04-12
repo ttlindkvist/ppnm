@@ -5,8 +5,20 @@ With error 	0.0000003034
 with 108 function evaluations
 
 int 4*sqrt(1-x*x) from 0 to 1
-Calculated to 	3.1415928364
-Should be 	3.1415926536
-With error 	0.0000001828
-with 228 function evaluations
+Calculated to 	3.14159265358979311600
+Should be 	3.14159265358979311600
+With error 	0.00000000000000000000
+with 4456120 function evaluations
+
+int sqrt(x) from 0 to 1
+Calculated to 	0.6666668357
+Should be 	0.6666666667
+With error 	0.0000001690
+with 196 function evaluations
+
+int 4*sqrt(1-x*x) from 0 to 1
+Calculated to 	3.14159265358979311600
+Should be 	3.14159265358979311600
+With error 	0.00000000000000000000
+with 6889892 function evaluations
 

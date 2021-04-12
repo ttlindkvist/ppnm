@@ -19,9 +19,17 @@ int main(){
             I1, 2./3, fabs(2./3-I1), fevals);
     
     fevals = 0;
-    double I2 = adapt_quad24(circle, 0, 1, 1e-5, 1e-5);
-    printf("int 4*sqrt(1-x*x) from 0 to 1\nCalculated to \t%.10f\nShould be \t%.10f\nWith error \t%.10f\nwith %d function evaluations\n\n", \
+    double I2 = adapt_quad24(circle, 0, 1, __DBL_EPSILON__, __DBL_EPSILON__);
+    printf("int 4*sqrt(1-x*x) from 0 to 1\nCalculated to \t%.20f\nShould be \t%.20f\nWith error \t%.20f\nwith %d function evaluations\n\n", \
             I2, M_PI, fabs(M_PI-I2), fevals);
+    fevals = 0;
+    double I3 = adapt_clenshaw_curtis(sqrt_x, 0, 1, 1e-5, 1e-5);
+    printf("int sqrt(x) from 0 to 1\nCalculated to \t%.10f\nShould be \t%.10f\nWith error \t%.10f\nwith %d function evaluations\n\n", \
+            I3, 2./3, fabs(2./3-I3), fevals);
     
+    fevals = 0;
+    double I4 = adapt_clenshaw_curtis(circle, 0, 1, __DBL_EPSILON__, __DBL_EPSILON__);
+    printf("int 4*sqrt(1-x*x) from 0 to 1\nCalculated to \t%.20f\nShould be \t%.20f\nWith error \t%.20f\nwith %d function evaluations\n\n", \
+            I4, M_PI, fabs(M_PI-I4), fevals);
     return 0;
 }
