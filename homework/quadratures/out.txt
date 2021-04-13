@@ -1,24 +1,59 @@
+
+------ PART A ------ 
+All integrals calculated with recursive adaptive integrator
+Absolute precision 0.0001 - Relative precision 0.0001
 int sqrt(x) from 0 to 1
-Calculated to 	0.6666669700
-Should be 	0.6666666667
-With error 	0.0000003034
-with 108 function evaluations
+Calculated to 	0.6666809328937376
+Should be 	0.6666666666666666
+With error	0.0000142662270710
+with 40 function evaluations
 
 int 4*sqrt(1-x*x) from 0 to 1
-Calculated to 	3.14159265358979311600
-Should be 	3.14159265358979311600
-With error 	0.00000000000000000000
+Calculated to 	3.1415975077026306
+Should be 	3.1415926535897931
+With error	0.0000048541128375
+with 80 function evaluations
+
+int  1/sqrt(x) from 0 to 1
+Calculated to 	1.9999973879640278
+Should be 	2.0000000000000000
+With error 	0.0000026120359722
+with 17140 function evaluations
+
+int ln(x)/sqrt(x) from 0 to 1
+Calculated to 	-3.9999983489902089
+Should be 	-4.0000000000000000
+With error 	 0.0000016510097911
+with 29972 function evaluations
+
+
+------ PART B ------
+
+int 1/sqrt(x) from 0 to 1 - using Clenshaw-Curtis transformation
+Calculated to 	1.9999998903107012
+Should be 	2.0000000000000000
+With error 	0.000000109689299
+with 52 function evaluations
+
+int ln(x)/sqrt(x) from 0 to 1 - using Clenshaw-Curtis transformation
+Calculated to 	-3.9999981333960255
+Should be 	-4.0000000000000000
+With error 	 0.000001866603974
+with 272 function evaluations
+
+As seen the CC transformation results in much fewer function evaluations
+Also, the error seems to be on the same order or lower (at a first glance)
+
+Evaluating 4*sqrt(1-x*x) with and without Clenshaw-Curtis with machine epsilon as eps and abs tolerance
+int 4*sqrt(1-x*x) from 0 to 1
+Calculated to 	3.1415926535897931
+Should be 	3.1415926535897931
+With error 	0.0000000000000000
 with 4456120 function evaluations
 
-int sqrt(x) from 0 to 1
-Calculated to 	0.6666668357
-Should be 	0.6666666667
-With error 	0.0000001690
-with 196 function evaluations
-
 int 4*sqrt(1-x*x) from 0 to 1
-Calculated to 	3.14159265358979311600
-Should be 	3.14159265358979311600
-With error 	0.00000000000000000000
+Calculated to 	3.1415926535897931
+Should be 	3.1415926535897931
+With error 	0.0000000000000000
 with 6889892 function evaluations
 
