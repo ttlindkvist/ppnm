@@ -1,7 +1,7 @@
-#include"integration.h"
-#include<assert.h>
-#include<math.h>
-#define NULL ((void*)0)
+#include"integration.hpp"
+#include<cassert>
+#include<cmath>
+
 /*
   Points used are {1/6, 2/6, 4/6, 5/6}
   Weights {2/6, 1/6, 1/6, 2/6} (trapezium rule)
@@ -14,11 +14,11 @@ double absc24[] = {1./6, 2./6, 4./6, 5./6};
 double w24[] = {2./6, 1./6, 1./6, 2./6}; 
 double v24[] = {1./4, 1./4, 1./4, 1./4}; 
 
-double qag24(double f(double,void*), double a, double b, double abs, double eps, double f2, double f3, unsigned int rec_depth){
+double qag24(double f(double), double a, double b, double abs, double eps, double f2, double f3, unsigned int rec_depth){
     assert(rec_depth<1000000); // Make sure the depth of recursion is below some max depth
     
-    double f1 = f(a + (b-a)*absc24[0], NULL);
-    double f4 = f(a + (b-a)*absc24[3], NULL);
+    double f1 = f(a + (b-a)*absc24[0]);
+    double f4 = f(a + (b-a)*absc24[3]);
     
     //Evaluate 2nd and 4th order estimate
     double Q = (2*f1 + f2 + f3 + 2*f4)/6*(b-a);
@@ -37,20 +37,20 @@ double qag24(double f(double,void*), double a, double b, double abs, double eps,
     }
     
 }
-double adapt_quad24(double f(double,void*), double a, double b, double abs, double eps){
+double adapt_quad24(double f(double), double a, double b, double abs, double eps){
     //Calculate the middle two points
-    double f2 = f(a + (b-a)*absc24[1], NULL);
-    double f3 = f(a + (b-a)*absc24[2], NULL);
+    double f2 = f(a + (b-a)*absc24[1]);
+    double f3 = f(a + (b-a)*absc24[2]);
     return qag24(f, a, b, abs, eps, f2, f3, 0);    
 }
 
-double (*cc_func)(double, void*);
+double (*cc_func)(double);
 double cc_a,cc_b;
-double cc_wrapper(double x, void* params){
-    return cc_func((cc_a+cc_b)/2 + (cc_b-cc_a)*cos(x)/2, NULL)*(cc_b-cc_a)*sin(x)/2;
+double cc_wrapper(double x){
+    return cc_func((cc_a+cc_b)/2 + (cc_b-cc_a)*cos(x)/2)*(cc_b-cc_a)*sin(x)/2;
 }
 
-double adapt_clenshaw_curtis(double f(double,void*), double a, double b, double abs, double eps){
+double adapt_clenshaw_curtis(double f(double), double a, double b, double abs, double eps){
     cc_func = f;
     cc_a = a;
     cc_b = b;

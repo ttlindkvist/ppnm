@@ -44,16 +44,29 @@ with 272 function evaluations
 As seen the CC transformation results in much fewer function evaluations
 Also, the error seems to be on the same order or lower (at a first glance)
 
-Evaluating 4*sqrt(1-x*x) with and without Clenshaw-Curtis with machine epsilon as eps and abs tolerance
+Evaluating 4*sqrt(1-x*x) with and without Clenshaw-Curtis with
+Absolute precision 1e-10 - Relative precision 1e-10
 int 4*sqrt(1-x*x) from 0 to 1
+Calculated to 	3.1415926535897993
+Should be 	3.1415926535897931
+With error 	0.0000000000000062
+with 25748 function evaluations
+
+int 4*sqrt(1-x*x) from 0 to 1 - using CC transformation
 Calculated to 	3.1415926535897931
 Should be 	3.1415926535897931
 With error 	0.0000000000000000
-with 4456120 function evaluations
+with 30540 function evaluations
 
-int 4*sqrt(1-x*x) from 0 to 1
-Calculated to 	3.1415926535897931
-Should be 	3.1415926535897931
-With error 	0.0000000000000000
-with 6889892 function evaluations
+As seen the CC transformation results in lower overall error, even with the same abs and eps supplied, with around the same number of function evaluations
 
+
+Comparing to the GSL implementation
+
+int ln(x)/sqrt(x) from 0 to 1
+Calculated to   -4.0000000000000853
+exact result    -4.0000000000000000
+estimated error  0.0000000000001354
+actual error     0.0000000000000853
+intervals        8
+calls            315
