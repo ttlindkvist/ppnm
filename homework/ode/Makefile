@@ -13,8 +13,8 @@ dyn_test: dyn_matrix_test
 
 
 	
-SHM.out SIR.out output.out nbody.out: main
-	./$< > output.out
+SHM.out SIR.out output.out nbody.out log: main
+	./$< 1> output.out 2> log
 
 SHM.png: SHM.out Makefile
 	echo '\
@@ -76,4 +76,4 @@ main: main.o ode.c ode.h matrix.c matrix.h dyn_matrix.c dyn_matrix.h
 dyn_matrix_test: dyn_matrix_test.o dyn_matrix.c dyn_matrix.h
 
 clean:
-	$(RM) main *.o *.out *.png dyn_matrix_test
+	$(RM) main *.o *.out *.png dyn_matrix_test log

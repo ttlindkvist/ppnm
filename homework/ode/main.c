@@ -166,7 +166,7 @@ int main(){
     gsl_vector_view y0_m = dyn_matrix_row_view(ylist, 0);
     gsl_vector_memcpy(&y0_m.vector, &y0_vec.vector);
     
-    steps = driver_dyn_size(nbody_wrapper(n, m3), 0, 20, 1e-3, 0.01, 1e-9, 1e-9, ylist, xlist);
+    steps = driver_dyn_size(nbody_wrapper(n, m3), 0, 6, 1e-3, 0.1, 1e-6, 1e-6, ylist, xlist);
     printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
     fprintf(nbody_out, "#index 0 - N=3 equal masses figure-8\n");
     for(int i = 0; i<abs(steps); i++){
