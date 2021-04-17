@@ -17,7 +17,6 @@ int driver(
 	double a,                     /* the start-point a */
 	double b,                     /* the end-point of the integration */
 	double h,                     /* initial step-size */
-	double maxh,
 	double acc,                   /* absolute accuracy goal */
 	double eps,                    /* relative accuracy goal */
 	gsl_matrix *ylist,          //Matrix of stored y values 
@@ -28,21 +27,19 @@ int driver_dyn_size(
 	double a,                     /* the start-point a */
 	double b,                     /* the end-point of the integration */
 	double h,                     /* initial step-size */
-	double maxh,
 	double acc,                   /* absolute accuracy goal */
 	double eps,                    /* relative accuracy goal */
 	dyn_matrix *ylist,          //Matrix of stored y values 
     dyn_vector *xlist
 ); /* calculate y(b) */
-int debug_driver(
+int driver_dyn_size_debug(
 	void (*f)(double, gsl_vector*, gsl_vector*), /* right-hand-side of dy/dt=f(t,y) */
 	double a,                     /* the start-point a */
 	double b,                     /* the end-point of the integration */
 	double h,                     /* initial step-size */
-	double maxh,
 	double acc,                   /* absolute accuracy goal */
 	double eps,                    /* relative accuracy goal */
-	gsl_matrix *ylist,          //Matrix of stored y values 
-    gsl_vector *xlist
+	dyn_matrix *ylist,          //Matrix of stored y values 
+    dyn_vector *xlist
 ); /* calculate y(b) */
 #endif
