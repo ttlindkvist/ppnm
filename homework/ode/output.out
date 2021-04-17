@@ -1,21 +1,29 @@
+
+---- ODE HOMEWORK ----
+
+The implemented runge-kutta is RK45.
+If not stated otherwise the absolute and relative precision is 0.001 and 0.001 respectively
+Since this method is very accurate the stepsize tends to increase so much that graphs become ugly
+Therefore a max step size has been implemented
 ------ SIMPLE HARMONIC MOTION ------
 
 Simple harmonic motion as a test. u''=-u
-From 0 to 20 with max stepsize of 0.2
-Steps taken: 19
-Final size of dynamic matrix 100 2
+From 0 to 20 with max stepsize of 0.1
+Steps taken: 202
+Final size of dynamic matrix 250 2
 
-SIR model
-(Tc, Tr) = (1, 7)
-Steps taken: 19
-Final size of dynamic matrix 200 3
-(Tc, Tr) = (2, 7)
-Steps taken: 14
-Final size of dynamic matrix 200 3
-(Tc, Tr) = (4, 7)
-Steps taken: 9
-Final size of dynamic matrix 200 3
+--------- SIR model --------
+(Tc, Tr) = (1, 14)
+Steps taken: 203
+Final size of dynamic matrix 250 3
+(Tc, Tr) = (2, 14)
+Steps taken: 203
+Final size of dynamic matrix 250 3
+(Tc, Tr) = (4, 14)
+Steps taken: 203
+Final size of dynamic matrix 250 3
+Plots are generated, and as seen increasing the Tc, the time between contacts, means flattening the curve.
 
-NBODY - N=3 and equal masses
-Steps taken: 130
+-------- NBODY - N=3 and equal masses ---------
+Steps taken: 122
 Final size of dynamic matrix 150 18

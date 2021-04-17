@@ -76,9 +76,9 @@ void (*nbody_wrapper(int _n, double *_ms))(double, gsl_vector*,gsl_vector*){
 }
 
 
-void SHM(){
+void SHM(double acc, double eps, double maxstep){
     printf("------ SIMPLE HARMONIC MOTION ------\n");
-    printf("\nSimple harmonic motion as a test. u''=-u\nFrom 0 to 20 with max stepsize of 0.2\n");
+    printf("\nSimple harmonic motion as a test. u''=-u\nFrom 0 to 20 with max stepsize of %g\n", maxstep);
     int init_size = 100, eqs = 2;
     dyn_matrix *ylist = dyn_matrix_alloc(init_size, eqs);
     dyn_vector *xlist = dyn_vector_alloc(init_size);
@@ -87,7 +87,7 @@ void SHM(){
     dyn_matrix_set(ylist, 0, 0, 1);
     dyn_matrix_set(ylist, 0, 1, 0);
     
-    int steps = driver_dyn_size(func_shm, 0, 20, 0.001, 1e-2, 1e-2, ylist, xlist);
+    int steps = driver_dyn_size(func_shm, 0, 20, 0.001, acc, eps, maxstep, ylist, xlist);
     printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
     
     FILE *SHM_out = fopen("SHM.out", "w");
@@ -100,9 +100,9 @@ void SHM(){
     fclose(SHM_out);
     fprintf(stderr, "Simple harmonic motion done\n");
 }
-void SIR(){
+void SIR(double acc, double eps, double maxstep){
     // ------- SIR MODEL ------ //
-    printf("\nSIR model\n");
+    printf("\n--------- SIR model --------\n");
     FILE *SIR_out = fopen("SIR.out", "w");
     int init_size = 200, eqs = 3;
     
@@ -114,8 +114,8 @@ void SIR(){
     dyn_matrix_set(ylist, 0, 1, 1e-2);
     dyn_matrix_set(ylist, 0, 2, 0);
     
-    printf("(Tc, Tr) = (1, 7)\n");
-    int steps = driver_dyn_size(sir_wrapper(1, 7), 0, 100, 1e-7, 1e-3, 1e-3, ylist, xlist);
+    printf("(Tc, Tr) = (1, 14)\n");
+    int steps = driver_dyn_size(sir_wrapper(1, 14), 0, 100, 1e-7, acc, eps, maxstep, ylist, xlist);
     printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
     
     fprintf(SIR_out, "#index 0 - Tc=1, Tr=7\n");
@@ -124,8 +124,8 @@ void SIR(){
         fprintf(SIR_out, "%g %g %g %g\n", dyn_vector_get(xlist, i), yi[0], yi[1], yi[2]);
     }
     
-    printf("(Tc, Tr) = (2, 7)\n");
-    steps = driver_dyn_size(sir_wrapper(2, 7), 0, 100, 1e-7, 1e-3, 1e-3, ylist, xlist);
+    printf("(Tc, Tr) = (2, 14)\n");
+    steps = driver_dyn_size(sir_wrapper(2, 14), 0, 100, 1e-7, acc, eps, maxstep, ylist, xlist);
     printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
     
     fprintf(SIR_out, "\n\n#index 1 - Tc=2, Tr=7\n");
@@ -134,8 +134,8 @@ void SIR(){
         fprintf(SIR_out, "%g %g %g %g\n", dyn_vector_get(xlist, i), yi[0], yi[1], yi[2]);
     }
     
-    printf("(Tc, Tr) = (4, 7)\n");
-    steps = driver_dyn_size(sir_wrapper(4, 7), 0, 100, 1e-7, 1e-3, 1e-3, ylist, xlist);
+    printf("(Tc, Tr) = (4, 14)\n");
+    steps = driver_dyn_size(sir_wrapper(4, 14), 0, 100, 1e-7, acc, eps, maxstep, ylist, xlist);
     printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
     
     fprintf(SIR_out, "\n\n#index 2 - Tc=4, Tr=7\n");
@@ -149,10 +149,12 @@ void SIR(){
     
     fclose(SIR_out);
     fprintf(stderr, "Sir model done\n");
+
+    printf("Plots are generated, and as seen increasing the Tc, the time between contacts, means flattening the curve.\n");
 }
-void NBODY(){
+void NBODY(double acc, double eps, double maxstep){
     // ------- NBODY ------ //
-    printf("\nNBODY - N=3 and equal masses\n");
+    printf("\n-------- NBODY - N=3 and equal masses ---------\n");
     FILE *nbody_out = fopen("nbody.out", "w");
     n = 3;
     double m3[3] = {1, 1, 1};
@@ -168,7 +170,7 @@ void NBODY(){
     gsl_vector_view y0_m = dyn_matrix_row_view(ylist, 0);
     gsl_vector_memcpy(&y0_m.vector, &y0_vec.vector);
     
-    int steps = driver_dyn_size_debug(nbody_wrapper(n, m3), 0, 6, 1e-3, 1e-3, 1e-3, ylist, xlist);
+    int steps = driver_dyn_size(nbody_wrapper(n, m3), 0, 6, 1e-3, acc, eps, maxstep, ylist, xlist);
     printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
     fprintf(nbody_out, "#index 0 - N=3 equal masses figure-8\n");
     for(int i = 0; i<abs(steps); i++){
@@ -182,12 +184,22 @@ void NBODY(){
     dyn_matrix_free(ylist);
     dyn_vector_free(xlist);
     fclose(nbody_out);
-}
-int main(){
-    SHM();
 
-    SIR();
+    fprintf(stderr, "NBODY done\n");
+}
+int main(){ 
+    double acc = 1e-3, eps=1e-3;
+
+    printf("\n---- ODE HOMEWORK ----\n\n");
+    printf("The implemented runge-kutta is RK45.\n");
+    printf("If not stated otherwise the absolute and relative precision is %g and %g respectively\n", acc, eps);
+    printf("Since this method is very accurate the stepsize tends to increase so much that graphs become ugly\n");
+    printf("Therefore a max step size has been implemented\n");
+
+    SHM(acc, eps, 0.1);
+
+    SIR(acc, eps, 0.5);
     
-    NBODY();   
+    NBODY(acc, eps, 0.05);   
     return 0;
 }

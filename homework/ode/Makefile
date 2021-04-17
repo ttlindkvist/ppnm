@@ -10,11 +10,9 @@ all: SHM.png SIR.png output.out 3body.png
 
 dyn_test: dyn_matrix_test
 	./$<
-
-
 	
-SHM.out SIR.out output.out nbody.out log: main
-	./$< 1> output.out 2> log
+SHM.out SIR.out output.out nbody.out: main
+	./$< 1> output.out
 
 SHM.png: SHM.out Makefile
 	echo '\
@@ -40,17 +38,17 @@ SIR.png: SIR.out Makefile
 	set key outside;\
 	set tics out;\
 	set xlabel "t (days)";\
-	set ylabel "Population (\%)";\
-	set xrange [0:50];\
+	set ylabel "Population (\%) - (Tc, Tr)";\
+	set xrange [0:100];\
 	set yrange [0:1];\
 	plot \
-	 "$<" index 0 using 1:2 with line color black title "S",\
+	 "$<" index 0 using 1:2 with line color black title "S (1, 14)",\
 	 "$<" index 0 using 1:3 with line color red title "I",\
 	 "$<" index 0 using 1:4 with line color green title "R",\
-	 "$<" index 1 using 1:2 with line lt 2 color black title "S",\
+	 "$<" index 1 using 1:2 with line lt 2 color black title "S (2, 14)",\
 	 "$<" index 1 using 1:3 with line lt 2 color red title "I",\
 	 "$<" index 1 using 1:4 with line lt 2 color green title "R",\
-	 "$<" index 2 using 1:2 with line lt 3 color black title "S",\
+	 "$<" index 2 using 1:2 with line lt 3 color black title "S (4, 14)",\
 	 "$<" index 2 using 1:3 with line lt 3 color red title "I",\
 	 "$<" index 2 using 1:4 with line lt 3 color green title "R"\
 	' | pyxplot
@@ -65,7 +63,7 @@ SIR.png: SIR.out Makefile
 	set xlabel "y";\
 	set ylabel "x";\
 	set xrange [-2:2];\
-	set yrange [-2:2];\
+	set yrange [-1:1];\
 	plot \
 	 "$<" index 0 using 1:2 with line color black title "m1",\
 	 "$<" index 0 using 4:5 with line color red title "m2",\
@@ -76,4 +74,4 @@ main: main.o ode.c ode.h matrix.c matrix.h dyn_matrix.c dyn_matrix.h
 dyn_matrix_test: dyn_matrix_test.o dyn_matrix.c dyn_matrix.h
 
 clean:
-	$(RM) main *.o *.out *.png dyn_matrix_test log
+	$(RM) main *.o *.out *.png dyn_matrix_test
