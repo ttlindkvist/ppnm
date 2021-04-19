@@ -93,3 +93,39 @@ Despite the abs and eps supplied are the same
 
 As seen above the implemented integrator returns its estimate of the integration error
 On should also note that this estimate always will be larger than the actual error
+
+Test on infinite integrals
+
+int exp(-x*x) from -infty to infty
+Calculated to     1.7723741460631461
+Exact result      1.7724538509055159
+Estimated error   0.0000825989824397
+Actual error      0.0000797048423697
+with 176 function evaluations
+
+int exp(-x)*cos(x) from 0 to infty
+Calculated to     0.5000174110892075
+Exact result      0.5000000000000000
+Estimated error   0.0000529272745351
+Actual error      0.0000174110892075
+with 132 function evaluations
+
+Comparing to the GSL implementation
+
+int exp(-x*x) from -infty to infty
+Calculated to    1.7724538509067373
+Exact result     1.7724538509055159
+Estimated error  0.0000043163646716
+Actual error     0.0000000000012215
+with 150 function evaluations
+
+int exp(-x)*cos(x) from 0 to infty
+Calculated to   0.5000000000070501
+Exact result    0.5000000000000000
+Estimated error 0.0000004321921842
+Actual error    0.0000000000070501
+with 135 function evaluations
+
+Again the GSL implementation uses around the same number of integrand evaluations
+But the error is many orders of magnitude lower.
+Despite the abs and eps supplied are the same

@@ -36,7 +36,7 @@ double qag24(double f(double,void*), double a, double b, double abs, double eps,
         double midpoint = (a+b)/2;
         double Q1 = qag24(f, a, midpoint, abs/sqrt(2.), eps, f1, f2, rec_depth + 1, &err1);
         double Q2 = qag24(f, midpoint, b, abs/sqrt(2.), eps, f3, f4, rec_depth + 1, &err2);
-        *err = sqrt(err1*err1 + err2*err2);
+        *err = sqrt(err1*err1 + err2*err2); // Calculate combined error from sub-intervals
         return Q1+Q2;
     }
     
@@ -81,5 +81,14 @@ double adapt_inf(double f(double,void*), double a, double b, double abs, double 
     inf_a = a;
     inf_b = b;
     
-    return adapt_quad24(cc_wrapper, 0, M_PI, abs, eps, err);  
+    if(isinf(a) && isinf(b)){
+        return adapt_clenshaw_curtis(inf_inf_wrapper, -1, 1, abs, eps, err);
+    }
+    else if(isinf(b)){
+        return adapt_clenshaw_curtis(a_inf_wrapper, 0, 1, abs, eps, err);
+    }
+    else if(isinf(a)){
+        return adapt_clenshaw_curtis(inf_b_wrapper, 0, 1, abs, eps, err);
+    }
+    return adapt_clenshaw_curtis(f, a, b, abs, eps, err);
 }

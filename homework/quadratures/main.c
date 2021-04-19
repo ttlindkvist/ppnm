@@ -20,10 +20,18 @@ double circle(double x, void *params){
     fevals++;
     return 4.*sqrt(1-x*x);
 }
+double f_exp_1(double x, void *params){
+    fevals++;
+    return exp(-x*x);
+}
+double f_exp_2(double x, void *params){
+    fevals++;
+    return exp(-x)*cos(x);
+}
 void test_function_24(double f(double, void*), double a, double b, double abs, double eps, double exact){
     fevals = 0;
     double error_estimate = 0;
-    double I = adapt_quad24(f, 0, 1, abs, eps, &error_estimate);
+    double I = adapt_quad24(f, a, b, abs, eps, &error_estimate);
     printf("Calculated to     %.16f\n", I);
     printf("Exact result      %.16f\n", exact);
     printf("Estimated error   %.16f\n", error_estimate);
@@ -33,14 +41,23 @@ void test_function_24(double f(double, void*), double a, double b, double abs, d
 void test_function_CC(double f(double, void*), double a, double b, double abs, double eps, double exact){
     fevals = 0;
     double error_estimate = 0;
-    double I = adapt_clenshaw_curtis(f, 0, 1, abs, eps, &error_estimate);
+    double I = adapt_clenshaw_curtis(f, a, b, abs, eps, &error_estimate);
     printf("Calculated to     %.16f\n", I);
     printf("Exact result      %.16f\n", exact);
     printf("Estimated error   %.16f\n", error_estimate);
     printf("Actual error      %.16f\n", fabs(exact-I));
     printf("with %d function evaluations\n\n", fevals);
 }
-
+void test_function_inf(double f(double, void*), double a, double b, double abs, double eps, double exact){
+    fevals = 0;
+    double error_estimate = 0;
+    double I = adapt_inf(f, a, b, abs, eps, &error_estimate);
+    printf("Calculated to     %.16f\n", I);
+    printf("Exact result      %.16f\n", exact);
+    printf("Estimated error   %.16f\n", error_estimate);
+    printf("Actual error      %.16f\n", fabs(exact-I));
+    printf("with %d function evaluations\n\n", fevals);
+}
 void partA(double eps, double abs){
     printf("\n------ PART A ------ \nAll integrals calculated with recursive adaptive integrator\n");
     printf("Absolute precision %g - Relative precision %g\n", abs, eps);
@@ -112,18 +129,56 @@ void partB_GSL(double eps, double abs){
     printf("Even though the GSL implementation uses more integrand evaluations, the error is many orders of magnitude lower.\n");
     printf("Despite the abs and eps supplied are the same\n");
 }
-void partC(){
+void partC(double eps, double abs){
     printf("\n------ PART C ------\n\n");
     printf("As seen above the implemented integrator returns its estimate of the integration error\n");
     printf("On should also note that this estimate always will be larger than the actual error\n");
-}
+    printf("\nTest on infinite integrals\n\n");
+    printf("int exp(-x*x) from -infty to infty\n");
+    test_function_inf(f_exp_1, -INFINITY, INFINITY, abs, eps, sqrt(M_PI));
 
+    printf("int exp(-x)*cos(x) from 0 to infty\n");
+    test_function_inf(f_exp_2, 0, INFINITY, abs, eps, 1./2);
+}
+void partC_GSL(double eps, double abs){
+    printf("Comparing to the GSL implementation\n\n");
+    gsl_integration_workspace *w = gsl_integration_workspace_alloc (1000);
+    double result, error;
+
+    gsl_function F;
+
+    F.function = &f_exp_1;
+    fevals = 0;
+    gsl_integration_qagi(&F, abs, eps, 1000, w, &result, &error);
+    printf("int exp(-x*x) from -infty to infty\n");
+    printf("Calculated to    %.16f\n", result);
+    printf("Exact result     %.16f\n", sqrt(M_PI));
+    printf("Estimated error  %.16f\n", error);
+    printf("Actual error     %.16f\n", fabs(sqrt(M_PI)-result));
+    printf("with %i function evaluations\n\n", fevals);
+
+    F.function = &f_exp_2;
+    fevals = 0;
+    gsl_integration_qagiu(&F, 0, abs, eps, 1000, w, &result, &error);
+    printf("int exp(-x)*cos(x) from 0 to infty\n");
+    printf("Calculated to   %.16f\n", result);
+    printf("Exact result    %.16f\n", 1./2);
+    printf("Estimated error %.16f\n", error);
+    printf("Actual error    %.16f\n", fabs(1./2-result));
+    printf("with %i function evaluations\n\n", fevals);
+    
+    gsl_integration_workspace_free (w);
+
+    printf("Again the GSL implementation uses around the same number of integrand evaluations\nBut the error is many orders of magnitude lower.\n");
+    printf("Despite the abs and eps supplied are the same\n");
+}
 int main(){
     double eps = 1e-4, abs = 1e-4;
     partA(eps, abs);
     partB(eps, abs, 1e-10, 1e-10);
     partB_GSL(eps, abs);
-    partC();
+    partC(eps, abs);
+    partC_GSL(eps, abs);
 
     return 0;
 }

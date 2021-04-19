@@ -154,7 +154,8 @@ void SIR(double acc, double eps, double maxstep){
 }
 void NBODY(double acc, double eps, double maxstep){
     // ------- NBODY ------ //
-    printf("\n-------- NBODY - N=3 and equal masses ---------\n");
+    printf("\n-------- NBODY ---------\n");
+    printf("\nFirst 3 bodies of forming a figure 8\n");
     FILE *nbody_out = fopen("nbody.out", "w");
     n = 3;
     double m3[3] = {1, 1, 1};
@@ -183,6 +184,46 @@ void NBODY(double acc, double eps, double maxstep){
     
     dyn_matrix_free(ylist);
     dyn_vector_free(xlist);
+
+    //Do another figure
+    printf("\nNow a 4 body solution almost forming an atomic symbol\n");
+    n = 4;
+    double m4[4] = {1, 1, 1, 1};
+    init_size = 100; eqs = 3*n*2;
+    
+    ylist = dyn_matrix_alloc(init_size, eqs);
+    xlist = dyn_vector_alloc(init_size);
+    
+    //Initial value    
+    double y02[] = {
+        -0.5091966069861722, 1.1420126037068834, 0,
+        -0.536844041872087, -0.8187464228819548, 0,
+        0.15059481202038588, 0.39389689651781934, 0,
+        0.8954458368378734, -0.7171630773427479, 0,
+        -1.1449094769247894, -0.5602702750794802, 0,
+        -0.04350261985812843, 0.7708499999957881, 0,
+        1.247618869002686, 0.32317677688965085, 0,
+        -0.05920677221976818, -0.5337565018059588, 0
+    };
+    gsl_vector_view y0_vec2 = gsl_vector_view_array(y02, eqs);
+    gsl_vector_view y0_m2 = dyn_matrix_row_view(ylist, 0);
+    gsl_vector_memcpy(&y0_m2.vector, &y0_vec2.vector);
+    
+    steps = driver_dyn_size(nbody_wrapper(n, m4), 0, 7, 1e-3, acc, eps, 1e-2, ylist, xlist);
+    printf("Steps taken: %d\nFinal size of dynamic matrix %d %d\n", steps, ylist->n1, ylist->n2);
+    fprintf(nbody_out, "\n\n#index 1 - N=4 equal masses atomic symbol (almost)\n");
+    for(int i = 0; i<abs(steps); i++){
+        double *yi = dyn_matrix_row(ylist, i);
+        for(int j = 0; j<3*n; j++){
+            fprintf(nbody_out, "%g ", yi[j]);
+        }
+        fprintf(nbody_out, "\n");
+    }
+    
+    dyn_matrix_free(ylist);
+    dyn_vector_free(xlist);
+
+
     fclose(nbody_out);
 
     fprintf(stderr, "NBODY done\n");
@@ -195,6 +236,7 @@ int main(){
     printf("If not stated otherwise the absolute and relative precision is %g and %g respectively\n", acc, eps);
     printf("Since this method is very accurate the stepsize tends to increase so much that graphs become ugly\n");
     printf("Therefore a max step size has been implemented\n");
+    printf("\nThe intermediate points are stored in a dynamic matrix\n");
 
     SHM(acc, eps, 0.1);
 

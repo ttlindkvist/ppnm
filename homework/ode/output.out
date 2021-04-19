@@ -5,6 +5,8 @@ The implemented runge-kutta is RK45.
 If not stated otherwise the absolute and relative precision is 0.001 and 0.001 respectively
 Since this method is very accurate the stepsize tends to increase so much that graphs become ugly
 Therefore a max step size has been implemented
+
+The intermediate points are stored in a dynamic matrix
 ------ SIMPLE HARMONIC MOTION ------
 
 Simple harmonic motion as a test. u''=-u
@@ -24,6 +26,12 @@ Steps taken: 203
 Final size of dynamic matrix 250 3
 Plots are generated, and as seen increasing the Tc, the time between contacts, means flattening the curve.
 
--------- NBODY - N=3 and equal masses ---------
+-------- NBODY ---------
+
+First 3 bodies of forming a figure 8
 Steps taken: 122
 Final size of dynamic matrix 150 18
+
+Now a 4 body solution almost forming an atomic symbol
+Steps taken: 702
+Final size of dynamic matrix 750 24

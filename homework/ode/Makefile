@@ -4,7 +4,7 @@ LDLIBS = $(shell gsl-config --libs)
 
 .PHONY: all clean dyn_test
 
-all: SHM.png SIR.png output.out 3body.png
+all: SHM.png SIR.png output.out 3body.png 4body.png
 	cat output.out
 
 
@@ -70,6 +70,23 @@ SIR.png: SIR.out Makefile
 	 "$<" index 0 using 7:8 with line color green title "m3"\
 	' | pyxplot
 	
+4body.png: nbody.out Makefile
+	echo '\
+	set terminal png;\
+	set output "$@";\
+	set title "Almost atomic symbol";\
+	set key top left;\
+	set tics out;\
+	set xlabel "y";\
+	set ylabel "x";\
+	set xrange [-3:3];\
+	set yrange [-1.5:1.5];\
+	plot \
+	 "$<" index 1 using 1:2 with line color black title "m1",\
+	 "$<" index 1 using 4:5 with line color red title "m2",\
+	 "$<" index 1 using 7:8 with line color green title "m3",\
+	 "$<" index 1 using 10:11 with line color blue title "m4"\
+	' | pyxplot
 main: main.o ode.c ode.h matrix.c matrix.h dyn_matrix.c dyn_matrix.h
 dyn_matrix_test: dyn_matrix_test.o dyn_matrix.c dyn_matrix.h
 
