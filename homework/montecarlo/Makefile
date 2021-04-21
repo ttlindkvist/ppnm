@@ -8,7 +8,7 @@ all: out.txt
 out.txt: main
 	./$< > $@
 
-main: main.cpp integration.cpp integration.hpp
+main: main.cpp montecarlo.cpp montecarlo.hpp
 
 clean:
 	find . -type f -executable -delete
