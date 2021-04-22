@@ -1,37 +1,45 @@
+Monte Carlo integration
+
+----------- Part A - plain monte carlo integration
+
 Calculating area of circle
-N = 10000
-Calculated to:   3.117200000000000
+N = 1000000
+Calculated to:   3.142464000000000
 Exact result:    3.141592653589793
-Estimated error: 0.016588743653454
-Actual error:    0.024392653589793
+Estimated error: 0.001641577292942
+Actual error:    0.000871346410207
 
 Calculating volume of sphere with radius 1
-N = 10000
-Calculated to:   4.271200000000000
+N = 1000000
+Calculated to:   4.193320000000000
 Exact result:    4.188790204786391
-Estimated error: 0.039907957301771
-Actual error:    0.082409795213610
+Estimated error: 0.003995325691054
+Actual error:    0.004529795213609
 
 Calculating int (1-cos(x)cos(y)cos(z))^-1 with x,y,z=(0, pi)
 N = 1000000
-Calculated to:   44.714566053496270
+Calculated to:   44.479432735443432
 Exact result:    43.198066515912686
-Estimated error: 1.591757498143171
-Actual error:    1.516499537583584
+Estimated error: 1.236029100961170
+Actual error:    1.281366219530746
+
+
+----------- Part B ---------
+Same functions but now this low-discrepancy (Halton) sequences
 
 Calculating area of circle
-N = 10000
-Calculated to:   3.141200000000000
+N = 1000000
+Calculated to:   3.141564000000000
 Exact result:    3.141592653589793
-Estimated error: 0.000400000000000
-Actual error:    0.000392653589793
+Estimated error: 0.000028000000000
+Actual error:    0.000028653589793
 
 Calculating volume of sphere with radius 1
-N = 10000
-Calculated to:   4.188000000000000
+N = 1000000
+Calculated to:   4.189000000000000
 Exact result:    4.188790204786391
-Estimated error: 0.015200000000000
-Actual error:    0.000790204786391
+Estimated error: 0.000472000000000
+Actual error:    0.000209795213610
 
 Calculating int (1-cos(x)cos(y)cos(z))^-1 with x,y,z=(0, pi)
 N = 1000000
@@ -40,3 +48,4 @@ Exact result:    43.198066515912686
 Estimated error: 0.013142489481613
 Actual error:    0.371597759154831
 
+Error comparison on volume of sphere

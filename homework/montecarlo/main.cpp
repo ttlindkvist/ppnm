@@ -30,23 +30,14 @@ void test_function_quasi(double f(double *x), std::vector<double> &a, std::vecto
     std::cout << "Estimated error: " << I1.second << std::endl;
     std::cout << "Actual error:    " << fabs(I1.first-exact) << std::endl << std::endl;
 }
-
-int main(){
-    std::cout << std::fixed;
-    std::cout << std::setprecision(15);
-    srand(10);
-
+void partA(int N){
     std::vector<double> a{-1, -1};
     std::vector<double> b{1, 1};
-    int N = 1e4;
-    int highN = 1e6;
-
-
     std::cout << "Calculating area of circle\nN = " << N << std::endl;
     test_function_plain(area_circle, a, b, N, M_PI);
 
-    a = std::vector<double>{-1, -1, -1};
-    b = std::vector<double>{1, 1, 1};
+    a.push_back(-1);
+    b.push_back(1);
 
     std::cout << "Calculating volume of sphere with radius 1\nN = " << N << std::endl;
     test_function_plain(vol_sphere, a, b, N, 4.*M_PI/3.);
@@ -54,19 +45,19 @@ int main(){
     a = std::vector<double>{0, 0, 0};
     b = std::vector<double>{M_PI, M_PI, M_PI};
 
-    std::cout << "Calculating int (1-cos(x)cos(y)cos(z))^-1 with x,y,z=(0, pi)\nN = " << highN << std::endl;
-    test_function_plain(f_inv_cosines, a, b, highN, 1.3932039296856*M_PI*M_PI*M_PI);
+    std::cout << "Calculating int (1-cos(x)cos(y)cos(z))^-1 with x,y,z=(0, pi)\nN = " << N << std::endl;
+    test_function_plain(f_inv_cosines, a, b, N, 1.3932039296856*M_PI*M_PI*M_PI);
 
-    
-    
-    a = std::vector<double>{-1, -1};
-    b = std::vector<double>{1, 1};
+}
+void partB(int N){
+    std::vector<double> a{-1, -1};
+    std::vector<double> b{1, 1};
     
     std::cout << "Calculating area of circle\nN = " << N << std::endl;
     test_function_quasi(area_circle, a, b, N, M_PI);
 
-    a = std::vector<double>{-1, -1, -1};
-    b = std::vector<double>{1, 1, 1};
+    a.push_back(-1);
+    b.push_back(1);
 
     std::cout << "Calculating volume of sphere with radius 1\nN = " << N << std::endl;
     test_function_quasi(vol_sphere, a, b, N, 4.*M_PI/3.);
@@ -74,12 +65,36 @@ int main(){
     a = std::vector<double>{0, 0, 0};
     b = std::vector<double>{M_PI, M_PI, M_PI};
 
-    std::cout << "Calculating int (1-cos(x)cos(y)cos(z))^-1 with x,y,z=(0, pi)\nN = " << highN << std::endl;
-    test_function_quasi(f_inv_cosines, a, b, highN, 1.3932039296856*M_PI*M_PI*M_PI);
+    std::cout << "Calculating int (1-cos(x)cos(y)cos(z))^-1 with x,y,z=(0, pi)\nN = " << N << std::endl;
+    test_function_quasi(f_inv_cosines, a, b, N, 1.3932039296856*M_PI*M_PI*M_PI);
+}
+void compareError(int Na, int Nb, int step, FILE *out){
 
-   
-
+    std::vector<double> a{-1, -1};
+    std::vector<double> b{1, 1};
+    for(int i = Na; i<Nb; i+=step){
+        std::pair<double,double> plain = plainmc(area_circle, a, b, i);
+        std::pair<double,double> quasi = quasi_mc(area_circle, a, b, i);
+        
+        fprintf(out, "%d %g %g %g %g\n", i, fabs(plain.first-M_PI), fabs(quasi.first-M_PI), plain.second, quasi.second);
+    }
+}
+int main(){
+    std::cout << std::fixed;
+    std::cout << std::setprecision(15);
+    srand(42);
     
+    std::cout << "Monte Carlo integration\n\n----------- Part A - plain monte carlo integration\n\n";
+    partA(1e6);
+    
+    
+    std::cout << "\n----------- Part B ---------\nSame functions but now this low-discrepancy (Halton) sequences\n\n";
+    partB(1e6);
+   
+    std::cout << "Error comparison on volume of sphere\n";
+    FILE *output = fopen("error.out", "w");
+    compareError(100, 2e5, 1e3, output);
 
+    fclose(output);
     return 0;
 }
