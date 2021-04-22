@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -Wall -std=c++17
-LDLIBS = -lstdc++
+CXXFLAGS = -Wall -std=c++17 -fopenmp -lgomp
+LDLIBS = -lstdc++ -lm
 
 all: out.txt
 	cat out.txt

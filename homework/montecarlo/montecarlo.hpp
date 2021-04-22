@@ -3,6 +3,7 @@
 #include<utility>
 #include<vector>
 
-std::pair<double,double> plainmc(double f(std::vector<double> &x), std::vector<double> &a, std::vector<double> &b, int N);
+std::pair<double,double> plainmc(double f(double *x), const std::vector<double> &a, const std::vector<double> &b, int N);
+std::pair<double,double> quasi_mc(double f(double *x), const std::vector<double> &a, const std::vector<double> &b, int N);
 
 #endif
