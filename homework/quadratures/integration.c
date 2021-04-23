@@ -50,8 +50,8 @@ double adapt_quad24(double f(double,void*), double a, double b, double abs, doub
     return I;
 }
 
-double (*cc_func)(double, void*);
-double cc_a,cc_b;
+static double (*cc_func)(double, void*);
+static double cc_a,cc_b;
 double cc_wrapper(double x, void* params){
     return cc_func((cc_a+cc_b)/2 + (cc_b-cc_a)*cos(x)/2, NULL)*(cc_b-cc_a)*sin(x)/2;
 }
@@ -64,8 +64,8 @@ double adapt_clenshaw_curtis(double f(double,void*), double a, double b, double 
     return adapt_quad24(cc_wrapper, 0, M_PI, abs, eps, err);  
 }
 
-double (*inf_func)(double, void*);
-double inf_a,inf_b;
+static double (*inf_func)(double, void*);
+static double inf_a,inf_b;
 double inf_inf_wrapper(double x, void* params){ //From -1 to 1
     return inf_func(x/(1-x*x), NULL)*(1+x*x)/((1-x*x)*(1-x*x));
 }

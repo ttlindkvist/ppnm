@@ -34,7 +34,7 @@ void test_function_quasi(double f(double *x), std::vector<double> &a, std::vecto
 void partA(int N){
     std::vector<double> a{-1, -1};
     std::vector<double> b{1, 1};
-    std::cout << "Calculating area of circle\nN = " << N << std::endl;
+    std::cout << "Calculating area of circle with radius " << R << "\nN = " << N << std::endl;
     test_function_plain(area_circle, a, b, N, M_PI*R*R);
 
     a.push_back(-1);
@@ -54,7 +54,7 @@ void partB(int N){
     std::vector<double> a{-1, -1};
     std::vector<double> b{1, 1};
     
-    std::cout << "Calculating area of circle\nN = " << N << std::endl;
+    std::cout << "Calculating area of circle with radius " << R << "\nN = " << N << std::endl;
     test_function_quasi(area_circle, a, b, N, M_PI*R*R);
 
     a.push_back(-1);
@@ -86,6 +86,9 @@ void compareError(int Na, int Nb, int step, FILE *out){
         fprintf(out, "%d %g %g %g %g\n", i, fabs(plain.first-exact), fabs(quasi.first-exact), plain.second, quasi.second);
     }
 }
+void partC(){
+    
+}
 int main(){
     std::cout << std::fixed;
     std::cout << std::setprecision(15);
@@ -97,8 +100,10 @@ int main(){
     
     std::cout << "\n----------- Part B ---------\nSame functions but now this low-discrepancy (Halton) sequences\n\n";
     partB(1e6);
+
+    std::cout << "As seen the error is about one order of magnitude lower for the Halton sequences\n";
    
-    std::cout << "Error comparison on volume of sphere\n";
+    std::cout << "The error comparison is done on the area of circle\n";
     FILE *output = fopen("error.out", "w");
     compareError(1000, 2e5, 500, output);
 

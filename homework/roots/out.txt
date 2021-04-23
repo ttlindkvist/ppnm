@@ -1,0 +1,13 @@
+
+Root finding
+-------- PART A -------
+
+Solving {cos(x)sin(y), cos(y)}=0 with initial guess (x,y) = (1, 1)
+eps = 0.0001
+
+x1 = 1.5707963267949
+x2 = 1.5707963267949
+With 4 jacobi evaluations
+Actual solution
+x1 = 1.5707963267949
+x2 = 1.5707963267949

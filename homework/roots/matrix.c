@@ -19,7 +19,8 @@ void print_matrix(gsl_matrix *A){
     }
 }
 void gen_rand_vector(gsl_vector *v){
-    for(int i = 0; i<v->size; i++){
+    int n = v->size;
+    for(int i = 0; i<n; i++){
         gsl_vector_set(v, i, 1.0*rand()/RAND_MAX);
     }
 }
@@ -102,7 +103,7 @@ void backsub(gsl_matrix *U, gsl_vector *c){
 void GS_decomp(gsl_matrix *A, gsl_matrix *R){
     int n = A->size1;
     int m = A->size2;
-    assert(R->size1==R->size2 && R->size1 == m);
+    assert(R->size1==R->size2 && R->size1 == A->size2);
     assert(n>=m);
     
     for(int i = 0; i<m; i++){
@@ -135,8 +136,8 @@ void GS_solve(gsl_matrix *Q, gsl_matrix *R, gsl_vector *b, gsl_vector *x){
 }
 void GS_inverse(gsl_matrix *Q, gsl_matrix *R, gsl_matrix *B){
     assert(Q->size1 == Q->size2 && R->size1 == R->size2 && Q->size1 == R->size1);
+    assert(B->size1 == Q->size1 && B->size2 == Q->size1);
     int n = Q->size1;
-    assert(B->size1 == n && B->size2 == n);
     gsl_vector *e_i = gsl_vector_alloc(n);
     gsl_vector *x = gsl_vector_alloc(n);
     for(int i = 0; i<n; i++){ // Solve Ax_i = e_i where A⁻¹ = {x_i}, A = QR

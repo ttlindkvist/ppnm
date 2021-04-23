@@ -3,7 +3,7 @@
 #include"integration.h"
 #include <gsl/gsl_integration.h>
 
-int fevals = 0; //Reused for all functions
+static int fevals = 0; //Reused for all functions
 double sqrt_x(double x, void *params){
     fevals++;
     return sqrt(x);
