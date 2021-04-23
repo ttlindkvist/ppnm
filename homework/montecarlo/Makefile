@@ -10,7 +10,7 @@ errorplot.png: error.out Makefile
 	set terminal png;\
 	set output "$@";\
 	set title "Error";\
-	set key top right;\
+	set key bottom left;\
 	set tics out;\
 	set xlabel "N";\
 	set ylabel "Error";\
@@ -19,15 +19,15 @@ errorplot.png: error.out Makefile
 	set logscale y;\
 	a=1;b=-0.5;\
 	f(x)=a*x**b;\
-	fit f(x) "$<" using 1:2 via a,b;\
+	fit f(x) withouterrors "$<" using 1:2 via a,b;\
 	c=1;d=-1;\
 	g(x)=c*x**d;\
-	fit g(x) "$<" using 1:3 via c,d;\
+	fit g(x) withouterrors "$<" using 1:3 via c,d;\
 	plot \
 	 "$<" using 1:2 with line color red title "pseudo",\
 	 "$<" using 1:3 with line color black title "quasi",\
-	 f(x) with line lt 2 color black title "",\
-	 g(x) with line lt 2 color black title ""\
+	 f(x) with line lt 2 color black title "$$%.2fn^{%.2f}$$"%(a,b),\
+	 g(x) with line lt 2 color black title "$$%.2fn^{%.2f}$$"%(c,d)\
 	' | pyxplot
 
 out.txt error.out: main

@@ -4,10 +4,10 @@ Monte Carlo integration
 
 Calculating area of circle
 N = 1000000
-Calculated to:   3.142464000000000
-Exact result:    3.141592653589793
-Estimated error: 0.001641577292942
-Actual error:    0.000871346410207
+Calculated to:   2.545380000000000
+Exact result:    2.544690049407733
+Estimated error: 0.001924203901773
+Actual error:    0.000689950592268
 
 Calculating volume of sphere with radius 1
 N = 1000000
@@ -29,10 +29,10 @@ Same functions but now this low-discrepancy (Halton) sequences
 
 Calculating area of circle
 N = 1000000
-Calculated to:   3.141564000000000
-Exact result:    3.141592653589793
-Estimated error: 0.000028000000000
-Actual error:    0.000028653589793
+Calculated to:   2.544656000000000
+Exact result:    2.544690049407733
+Estimated error: 0.000040000000000
+Actual error:    0.000034049407733
 
 Calculating volume of sphere with radius 1
 N = 1000000

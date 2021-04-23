@@ -12,8 +12,9 @@ double vol_sphere(double *x){
     double r2 = x[0]*x[0]+x[1]*x[1]+x[2]*x[2];
     return r2 <= 1 ? 1 : 0; 
 }
+double R = 0.9;
 double area_circle(double *x){
-    return x[0]*x[0]+x[1]*x[1] <= 1 ? 1 : 0;
+    return x[0]*x[0]+x[1]*x[1] <= R*R ? 1 : 0;
 }
 
 void test_function_plain(double f(double *x), std::vector<double> &a, std::vector<double> &b, int N, double exact){
@@ -34,7 +35,7 @@ void partA(int N){
     std::vector<double> a{-1, -1};
     std::vector<double> b{1, 1};
     std::cout << "Calculating area of circle\nN = " << N << std::endl;
-    test_function_plain(area_circle, a, b, N, M_PI);
+    test_function_plain(area_circle, a, b, N, M_PI*R*R);
 
     a.push_back(-1);
     b.push_back(1);
@@ -54,7 +55,7 @@ void partB(int N){
     std::vector<double> b{1, 1};
     
     std::cout << "Calculating area of circle\nN = " << N << std::endl;
-    test_function_quasi(area_circle, a, b, N, M_PI);
+    test_function_quasi(area_circle, a, b, N, M_PI*R*R);
 
     a.push_back(-1);
     b.push_back(1);
@@ -69,14 +70,20 @@ void partB(int N){
     test_function_quasi(f_inv_cosines, a, b, N, 1.3932039296856*M_PI*M_PI*M_PI);
 }
 void compareError(int Na, int Nb, int step, FILE *out){
-
     std::vector<double> a{-1, -1};
     std::vector<double> b{1, 1};
-    for(int i = Na; i<Nb; i+=step){
+    double exact = M_PI*R*R;
+    for(int i = Na; i<Nb/3; i+=step/4){
         std::pair<double,double> plain = plainmc(area_circle, a, b, i);
         std::pair<double,double> quasi = quasi_mc(area_circle, a, b, i);
         
-        fprintf(out, "%d %g %g %g %g\n", i, fabs(plain.first-M_PI), fabs(quasi.first-M_PI), plain.second, quasi.second);
+        fprintf(out, "%d %g %g %g %g\n", i, fabs(plain.first-exact), fabs(quasi.first-exact), plain.second, quasi.second);
+    }
+    for(int i = Nb/3; i<Nb; i+=step){
+        std::pair<double,double> plain = plainmc(area_circle, a, b, i);
+        std::pair<double,double> quasi = quasi_mc(area_circle, a, b, i);
+        
+        fprintf(out, "%d %g %g %g %g\n", i, fabs(plain.first-exact), fabs(quasi.first-exact), plain.second, quasi.second);
     }
 }
 int main(){
@@ -93,7 +100,7 @@ int main(){
    
     std::cout << "Error comparison on volume of sphere\n";
     FILE *output = fopen("error.out", "w");
-    compareError(100, 2e5, 1e3, output);
+    compareError(1000, 2e5, 500, output);
 
     fclose(output);
     return 0;

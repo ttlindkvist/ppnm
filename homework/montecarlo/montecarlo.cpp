@@ -44,24 +44,25 @@ double corput(int n, int base){
     }
     return q;
 }
-void halton1(int n, int d, double *x){
+void halton1(int n, int d, double *x, const double *diff, const double *a){
     static const int base[]= {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67};
     static const int maxd = sizeof(base)/sizeof(int);
     
     assert(d<=maxd);
     for(int i = 0; i<d; i++){
-        x[i] = corput(n, base[i]);
+        x[i] = diff[i]*corput(n, base[i]) + a[i];
     }
 }
-void halton2(int n, int d, double *x){
+void halton2(int n, int d, double *x, const double *diff, const double *a){
     static const int base[]= {3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71};
     static const int maxd = sizeof(base)/sizeof(int);
     
     assert(d<=maxd);
     for(int i = 0; i<d; i++){
-        x[i] = corput(n, base[i]);
+        x[i] = diff[i]*corput(n, base[i]) + a[i];
     }
 }
+
 
 std::pair<double,double> quasi_mc(double f(double *x), const std::vector<double> &a, const std::vector<double> &b, int N){
     assert(a.size() == b.size());
@@ -84,20 +85,14 @@ std::pair<double,double> quasi_mc(double f(double *x), const std::vector<double>
         #pragma omp section //halton1
         {
             for(int i = 0; i<N/2; i++){
-                halton1(i+1, dim, x1);
-                for(int j = 0; j<dim; j++){
-                    x1[j] = x1[j]*diff[j]+a[j];
-                }
+                halton1(i+1, dim, x1, diff, a.data());
                 sum1 += f(x1);
             }
         }
         #pragma omp section //halton2
         {
             for(int i = 0; i<N/2; i++){
-                halton2(i+1, dim, x2);
-                for(int j = 0; j<dim; j++){
-                    x2[j] = x2[j]*diff[j]+a[j];
-                }
+                halton2(i+1, dim, x2, diff, a.data());
                 sum2 += f(x2);
             }
         }
