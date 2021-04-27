@@ -22,7 +22,7 @@ void newton(Function &f, gsl_vector *x, double eps, int &j_count, bool gradient)
     
     do{
         if(!gradient)   f.jacobian(J, x, fx);
-        else            {f.hessian(J, x, fx);}
+        else            f.hessian(J, x, fx);
 
         j_count++;
 
@@ -31,11 +31,11 @@ void newton(Function &f, gsl_vector *x, double eps, int &j_count, bool gradient)
         GS_decomp(J, R);
         GS_solve(J, R, fx, deltax);
 
+        fx_norm = gsl_blas_dnrm2(fx);
+
         lambda = 2;
         do{
             lambda /= 2.;
-            //Find norms
-            fx_norm = gsl_blas_dnrm2(fx);
 
             gsl_vector_memcpy(x_ldx, x);
             gsl_blas_daxpy(lambda, deltax, x_ldx);

@@ -22,3 +22,14 @@ With 160 hessian evaluations
 Actual solution
 x1 = 1
 x2 = 1
+
+
+-------- PART B -------
+
+Bound state of hydrogen via shooting method and initial guess of E=-2
+eps = 0.0001
+
+E = -0.499972974318284
+With 14 jacobi evaluations
+Actual solution
+E = -0.5
