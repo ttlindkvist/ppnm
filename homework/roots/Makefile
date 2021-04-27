@@ -10,7 +10,7 @@ all: out.txt
 out.txt error.out: main
 	./$< > out.txt
 
-main: main.cpp roots.cpp roots.hpp matrix.c matrix.h
+main: main.cpp roots.cpp roots.hpp matrix.c matrix.h function.cpp function.hpp
 
 clean:
 	find . -type f -executable -delete

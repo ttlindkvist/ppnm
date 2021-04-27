@@ -11,3 +11,14 @@ With 4 jacobi evaluations
 Actual solution
 x1 = 1.5707963267949
 x2 = 1.5707963267949
+
+
+Finding extrema of rosenbrock with initial guess (0.5, 0.5)
+eps = 0.0001
+
+x1 = 0.999995522233819
+x2 = 0.999991037037078
+With 160 hessian evaluations
+Actual solution
+x1 = 1
+x2 = 1
