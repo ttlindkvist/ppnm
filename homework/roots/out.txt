@@ -33,3 +33,5 @@ E = -0.499972974318284
 With 14 jacobi evaluations
 Actual solution
 E = -0.5
+
+The calculated and exact wavefunction have been plotted to wavefunc.png

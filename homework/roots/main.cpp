@@ -46,35 +46,32 @@ void schrodinger(double r, gsl_vector *y, gsl_vector *dydt){
     gsl_vector_set(dydt, 1, -2.0*(_schr_E + 1./r)*f);
 }
 
+static double _hydrogen_min_r = 1e-3;
 static double _hydrogen_max_r = 8;
 void hydrogen(gsl_vector *x, gsl_vector *fx){
-    static double rmin = 1e-3;
     
     _schr_E = gsl_vector_get(x, 0);
     
     gsl_vector *fs = gsl_vector_alloc(2);
 
     //Boundary condition f(r->0) = r-r*r
-    gsl_vector_set(fs, 0, rmin-rmin*rmin);
-    gsl_vector_set(fs, 1, 1-2.*rmin);
+    gsl_vector_set(fs, 0, _hydrogen_min_r-_hydrogen_min_r*_hydrogen_min_r);
+    gsl_vector_set(fs, 1, 1-2.*_hydrogen_min_r);
 
-    ode_driver_no_save(schrodinger, rmin, _hydrogen_max_r, 1e-3, 1e-3, 1e-3, 0.1, fs);
+    ode_driver_no_save(schrodinger, _hydrogen_min_r, _hydrogen_max_r, 1e-3, 1e-3, 1e-3, 0.1, fs);
 
     gsl_vector_set(fx, 0, gsl_vector_get(fs, 0));
 
     gsl_vector_free(fs);
 }
-
-int main(){
-    double eps = 1e-4;
+void partA(double eps){
     int j_count = 0;
     double x[2] = {1, 1};
     
     gsl_vector_view x_view = gsl_vector_view_array(x, 2);
 
     Function f(f1, 2);
-    printf("\nRoot finding\n");
-    printf("-------- PART A -------\n\n");
+    
     printf("Solving {cos(x)sin(y), cos(y)}=0 with initial guess (x,y) = (1, 1)\n");
     printf("eps = %g\n\n", eps);
 
@@ -94,9 +91,9 @@ int main(){
 
     printf("x1 = %.15g\nx2 = %.15g\nWith %d hessian evaluations\n", x[0], x[1], j_count);
     printf("Actual solution\nx1 = %.15g\nx2 = %.15g\n", 1., 1.);
-
-    printf("\n\n-------- PART B -------");
-
+}
+void partB(double eps){
+    int j_count = 0;
     double h_params[1] = {-2};
     gsl_vector_view h_view = gsl_vector_view_array(h_params, 1);
 
@@ -108,4 +105,39 @@ int main(){
 
     printf("E = %.15g\nWith %d jacobi evaluations\n", h_params[0], j_count);
     printf("Actual solution\nE = -0.5\n");
+
+    dyn_matrix *ylist = dyn_matrix_alloc(20, 2);
+    dyn_vector *xlist = dyn_vector_alloc(20);
+    dyn_matrix_set(ylist, 0, 0, _hydrogen_min_r - _hydrogen_min_r*_hydrogen_min_r);
+    dyn_matrix_set(ylist, 0, 1, 1 - 2*_hydrogen_min_r);
+    dyn_vector_set(xlist, 0, _hydrogen_min_r);
+
+    int steps = ode_driver_save(schrodinger, _hydrogen_min_r, _hydrogen_max_r, 1e-3, 1e-4, 1e-4, 0.01, ylist, xlist);
+
+    FILE *output = fopen("wavefunc.out", "w");
+
+    for(int i = 0; i<steps; i++){
+        double x = dyn_vector_get(xlist, i);
+        double *y = dyn_matrix_row(ylist, i);
+        double exact = x*exp(-x);
+        fprintf(output, "%g %g %g %g\n", x, y[0], y[1], exact);
+    }
+
+    fclose(output);
+    dyn_matrix_free(ylist);
+    dyn_vector_free(xlist);
+
+    printf("\nThe calculated and exact wavefunction have been plotted to wavefunc.png\n");
+}
+
+int main(){
+    printf("\nRoot finding\n");
+    
+    printf("-------- PART A -------\n\n");
+    partA(1e-4);
+
+    printf("\n\n-------- PART B -------");
+    partB(1e-4);
+
+
 }
