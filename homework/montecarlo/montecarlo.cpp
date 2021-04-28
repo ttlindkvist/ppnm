@@ -97,5 +97,6 @@ std::pair<double,double> quasi_mc(double f(double *x), const std::vector<double>
             }
         }
     }
-    return std::pair<double,double>((sum1+sum2)/N*V, fabs(sum1-sum2)/N*V);
+    // Error is difference in estimates - remember number of points is N/2 for each subdivision
+    return std::pair<double,double>((sum1+sum2)/N*V, 2.*fabs(sum1-sum2)/N*V); 
 }

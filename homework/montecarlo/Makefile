@@ -9,7 +9,7 @@ errorplot.png: error.out Makefile
 	echo '\
 	set terminal png;\
 	set output "$@";\
-	set title "Error";\
+	set title "Error - area of a circle";\
 	set key bottom left;\
 	set tics out;\
 	set xlabel "N";\
