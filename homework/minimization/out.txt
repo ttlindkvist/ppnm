@@ -1,0 +1,20 @@
+Minimization
+--------- Part A ---------
+Quasi-newton method with symmetric Broyden update
+eps=0.001
+
+Minimizing x*x + 2x - 1
+Initial x   :    2.0000000 
+Minimum     :   -1.0000000 
+Steps taken :    1
+
+Minimizing Rosenbrock's function
+Initial x   :   18.0000000 15.0000000 
+Minimum     :    0.9999245  0.9998466 
+Steps taken :    167
+
+Minimizing Himmelblau's function
+Initial x   :   18.0000000 15.0000000 
+Minimum     :   -3.7793110 -3.2831865 
+Steps taken :    22
+
