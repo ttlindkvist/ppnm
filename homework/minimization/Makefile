@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -std=c++17 -Wno-sign-compare
+CXXFLAGS = -Wall -std=c++17
 CXXFLAGS += $(shell gsl-config --cflags)
 LDLIBS = -lstdc++
 LDLIBS += $(shell gsl-config --libs)
@@ -10,7 +10,7 @@ all: out.txt
 out.txt : main
 	./$< > out.txt
 
-main: main.cpp minimization.cpp minimization.hpp function.cpp function.hpp
+main: main.cpp minimization.cpp minimization.hpp
 
 clean:
 	find . -type f -executable -delete

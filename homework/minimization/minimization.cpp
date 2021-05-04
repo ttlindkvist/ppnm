@@ -1,12 +1,31 @@
 #include "minimization.hpp"
-#include"function.hpp"
 #include<gsl/gsl_matrix.h>
 #include<gsl/gsl_blas.h>
 #include<cmath>
 #include<cstdio>
+#include<functional>
 
+void print_vector(gsl_vector *v);
 
-int qnewton(Function &f, gsl_vector *x, double eps){
+template<typename Callable> 
+void gradient(Callable f, gsl_vector *grad, gsl_vector *x){
+    static const double dx = sqrt(__DBL_EPSILON__);
+    int n = x->size;
+    
+    double fx = f(x);
+    for(int i = 0; i<n; i++){
+        double xi = gsl_vector_get(x, i);
+        
+        gsl_vector_set(x, i, xi+dx);
+        double f_new_x = f(x);
+        gsl_vector_set(grad, i, (f_new_x-fx)/dx);
+        
+        gsl_vector_set(x, i, xi);
+    }
+}
+
+template<typename Callable>
+int qnewton(Callable f, gsl_vector *x, double eps){
     const double ALPHA = 1e-3;
     const double DELTA = sqrt(__DBL_EPSILON__); 
     int n = x->size;
@@ -27,8 +46,7 @@ int qnewton(Function &f, gsl_vector *x, double eps){
     int steps = 0;
     
     fx = f(x);
-    f.gradient(grad, x);
-        
+    gradient(f, grad, x);
     while(gsl_blas_dnrm2(grad) > eps){        
         gsl_blas_dgemv(CblasNoTrans, -1, B, grad, 0, s);
         
@@ -55,7 +73,7 @@ int qnewton(Function &f, gsl_vector *x, double eps){
             gsl_matrix_set_identity(B);
         } else {
             //Symmetric Broyden update
-            f.gradient(y, x_s);
+            gradient(f, y, x_s);
             gsl_blas_daxpy(-1, grad, y);
             
             gsl_blas_dgemv(CblasNoTrans, -1, B, y, 0, u);
@@ -79,7 +97,7 @@ int qnewton(Function &f, gsl_vector *x, double eps){
         gsl_vector_memcpy(x, x_s);
         steps++;
         fx = f(x);
-        f.gradient(grad, x);
+        gradient(f, grad, x);
     }
     
     gsl_matrix_free(B);
@@ -90,4 +108,27 @@ int qnewton(Function &f, gsl_vector *x, double eps){
     gsl_vector_free(u);
     gsl_vector_free(a);
     return steps;
+}
+template int qnewton<double(*)(gsl_vector*)>(double(*)(gsl_vector*), gsl_vector *, double);
+
+
+double CurveFit::chi2(gsl_vector *params){
+    double sum = 0;
+    int size = this->xs.size();
+    for(int i = 0; i<size; i++){
+        double f = this->fit_function(this->xs[i], params);
+        sum += (f-this->ys[i])*(f-this->ys[i])/this->yerrs[i]/this->yerrs[i];
+    }
+    return sum;
+}
+
+CurveFit::CurveFit(double (*f)(double, gsl_vector*), std::vector<double> &x, std::vector<double> &y, std::vector<double> &yerr)
+    :xs(x),ys(y),yerrs(yerr){
+   this->fit_function = f;
+}
+int CurveFit::fit(gsl_vector *params, double eps){
+    int steps = qnewton([&](gsl_vector*p){return this->chi2(p);}, params, eps);
+    return steps;
+}
+CurveFit::~CurveFit(){
 }

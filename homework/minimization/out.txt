@@ -18,3 +18,14 @@ Initial x   :   18.0000000 15.0000000
 Minimum     :   -3.7793110 -3.2831865 
 Steps taken :    22
 
+
+
+----------- Part B -----------
+eps=0.001
+
+Fitting higgs data to BW function
+Initial guess for (m, Gamma, A) = 120.0000000  4.0000000  5.0000000 
+
+Fitting yields (m, Gamma, A) = 125.9721699 -2.0862993  9.8759375 
+with 28 steps taken
+Note: Gamma has a wrong sign, since BW has Gamma*Gamma - positive is of course used
