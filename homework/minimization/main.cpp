@@ -12,13 +12,15 @@ void print_vector(gsl_vector *v){
     }
     printf("\n");
 }
-void read_points(FILE *in_stream, std::vector<double> &xs, std::vector<double> &ys, std::vector<double> &y_errs){
+void read_points(const char* filename, std::vector<double> &xs, std::vector<double> &ys, std::vector<double> &y_errs){
+    FILE *in_stream = fopen(filename, "r");
     double x, y, yerr;
     while(fscanf(in_stream, "%lg %lg %lg", &x, &y, &yerr) > 0){
         xs.push_back(x);
         ys.push_back(y);
         y_errs.push_back(yerr);
     }
+    fclose(in_stream);
 }
 
 double f1(gsl_vector *x){
@@ -79,9 +81,9 @@ void partA(double eps){
 }
 void partB(double eps){
     printf("\n\n----------- Part B -----------\neps=%g\n\n",eps);
-    FILE *higgs_input = fopen("higgs.in", "r");
+    
     std::vector<double> xs, ys, yerrs;
-    read_points(higgs_input, xs, ys, yerrs);
+    read_points("higgs.in", xs, ys, yerrs);
     
     gsl_vector *p = gsl_vector_calloc(3);
     gsl_vector_set(p, 0, 120);
@@ -100,7 +102,16 @@ void partB(double eps){
     
     printf("Note: Gamma has a wrong sign, since BW has Gamma*Gamma - positive is of course used\n");
     
-    fclose(higgs_input);
+    FILE *higgs_out = fopen("higgs_fit.out", "w");
+    double E1=100, E2=160;
+    int N = 1000;
+    for(int i = 0; i<N; i++){
+        double E = (E2-E1)*i/N + E1;
+        double f = BW(E, p);
+        fprintf(higgs_out, "%g %g\n", E, f);
+    }
+    fclose(higgs_out);
+    
     gsl_vector_free(p);
 }
 int main(){

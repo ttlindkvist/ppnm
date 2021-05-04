@@ -5,8 +5,6 @@
 #include<cstdio>
 #include<functional>
 
-void print_vector(gsl_vector *v);
-
 template<typename Callable> 
 void gradient(Callable f, gsl_vector *grad, gsl_vector *x){
     static const double dx = sqrt(__DBL_EPSILON__);
@@ -109,7 +107,7 @@ int qnewton(Callable f, gsl_vector *x, double eps){
     gsl_vector_free(a);
     return steps;
 }
-template int qnewton<double(*)(gsl_vector*)>(double(*)(gsl_vector*), gsl_vector *, double);
+template int qnewton<double(*)(gsl_vector*)>(double(*)(gsl_vector*), gsl_vector *, double); //Explicit declaration for use outside this .cpp
 
 
 double CurveFit::chi2(gsl_vector *params){
