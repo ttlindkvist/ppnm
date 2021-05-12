@@ -1,0 +1,1 @@
+Training minimizing steps: 100000

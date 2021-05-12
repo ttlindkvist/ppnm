@@ -30,4 +30,4 @@ main: main.cpp minimization.cpp minimization.hpp
 
 clean:
 	find . -type f -executable -delete
-	$(RM) *.o out.* *.out
+	$(RM) *.o out.* *.out *.png
