@@ -1,1 +1,8 @@
-Training minimizing steps: 100000
+Artificial Neural Network Homework
+------ PART A --------
+ANN with one hidden layer with 10 neurons
+Done in C++ with an ANN class with a randomized set of initial parameters
+Activation function is a gaussian wavelet
+ANN is trained on a single set of points
+
+Training took 10000 minimizing steps (with 10000 being max allowed)

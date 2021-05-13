@@ -236,7 +236,9 @@ int driver(
     gsl_vector_set(xlist, 0, a);
     double x = a;
     while(x < b){
-        gsl_vector_set_all(err, 0);
+        gsl_vector_set_zero(err);
+        gsl_matrix_set_zero(Ks);
+        
         yt = gsl_matrix_row(ylist, step);
         yb = gsl_matrix_row(ylist, step+1);
         if(x + h > b){

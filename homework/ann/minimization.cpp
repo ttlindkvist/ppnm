@@ -46,7 +46,7 @@ int qnewton(Callable f, gsl_vector *x, double eps){
     
     fx = f(x);
     gradient(f, grad, x);
-    while(gsl_blas_dnrm2(grad) > eps && steps < 1e5){        
+    while(gsl_blas_dnrm2(grad) > eps && steps < 1e4){        
         gsl_blas_dgemv(CblasNoTrans, -1, B, grad, 0, s);
         
         //Find appropriate step-size
