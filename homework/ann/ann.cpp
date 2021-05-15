@@ -93,7 +93,7 @@ double ANN::resp_integ(double xa, double xb){
         b = gsl_vector_get(this->params, 3*i + 1);
         w = gsl_vector_get(this->params, 3*i + 2);
         
-        sum += this->activation_f_integ((xa - a)/b)*w*b - this->activation_f_integ((xb - a)/b)*w*b;
+        sum += this->activation_f_integ((xb - a)/b)*w*b - this->activation_f_integ((xa - a)/b)*w*b;
     }    
     return sum;
 }

@@ -1,8 +1,11 @@
 Artificial Neural Network Homework
 ------ PART A --------
-ANN with one hidden layer with 10 neurons
-Done in C++ with an ANN class with a randomized set of initial parameters
+ANN with one hidden layer with 4 neurons
+Done in C++ with an ANN class
 Activation function is a gaussian wavelet
-ANN is trained on a single set of points
+ANN is trained on a single set of points to fit the function cos(5x-1)*exp(-x*x)
 
-Training took 10000 minimizing steps (with 10000 being max allowed)
+Training took 10000 minimizing steps (with 10000 being max allowed pr. run)
+
+------ PART B --------
+A plot of the derivative together with the integral over -1 to x has been - plotB.png
