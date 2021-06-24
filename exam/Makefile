@@ -1,4 +1,4 @@
-CFLAGS = -O -Wall -Werror
+CFLAGS = -Ofast -Wall -Werror
 CFLAGS += $(shell gsl-config --cflags)
 LDLIBS = $(shell gsl-config --libs)
 
@@ -16,20 +16,29 @@ timing.png: timing.out Makefile
 	set tics out;\
 	set xlabel "N";\
 	set ylabel "Time [ms]";\
-	set xrange [10:500];\
-	set yrange [0:1000];\
+	set xrange [0:300];\
+	set yrange [0:11000];\
 	a=1;\
 	b=2;\
 	f(x)=a*x**b;\
 	fit f(x) "$<" using 1:2 via a,b;\
+	c=1;\
+	d=2;\
+	g(x)=c*x**d;\
+	fit g(x) "$<" using 1:3 via c,d;\
 	plot \
-	 "$<" using 1:2 with line color red title "My two sided jacobi SVD",\
-	 f(x) with line lt 2 color black title "$$\\alpha N^{%.2f}$$"%(b)\
+	 "$<" using 1:2 with points color red title "My two-sided jacobi SVD",\
+	 "$<" using 1:3 with points color black title "GSL one-sided jacobi SVD",\
+	 f(x) with line lt 2 color black title "$$\\alpha N^{%.2f}$$"%(b),\
+	 g(x) with line lt 2 color black title "$$\\beta N^{%.2f}$$"%(d)\
 	' | pyxplot
 	
-output.out timing.out: main
-	./$< > output.out
-	
+output.out: main
+	./$< test > output.out
+
+timing.out: main
+	./$< time
+
 main: main.o matrix.o SVD_two_jaco.o
 
 clean:

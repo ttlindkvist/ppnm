@@ -1,6 +1,6 @@
 #include"matrix.h"
 #include<gsl/gsl_blas.h>
-#include<gsl/gsl_eigen.h>
+#include<gsl/gsl_linalg.h>
 
 #include<stdio.h>
 #include<time.h>
@@ -9,10 +9,6 @@
 #include<string.h>
 #define true 1
 #define false 0
-
-int testDiag(gsl_matrix *A){
-    return 0;
-}
 
 //Testing algorithm on tall matrix with n>m
 complex test_SVD(int n, int m, double tau, double eps){
@@ -55,8 +51,7 @@ complex test_SVD(int n, int m, double tau, double eps){
     else if(check_diagonal(D, tau, eps) == false){
         err_code = 4; // Check D is diagonal
     }
-    
-    
+        
     gsl_matrix_free(A);
     gsl_matrix_free(D);
     gsl_matrix_free(U);
@@ -73,7 +68,6 @@ void compare_GSL(){
 
 void show_basic_func(){   
     printf("Two-sided Jacobi alg. for SVD\n\n");
-    
     
     int n = 7, m = 5;
     gsl_matrix *A = gsl_matrix_alloc(n, m);    
@@ -112,14 +106,12 @@ void show_basic_func(){
     
     gsl_blas_dgemm(CblasTrans, CblasNoTrans, 1, U, U, 0, UTU);
     gsl_blas_dgemm(CblasTrans, CblasNoTrans, 1, V, V, 0, VTV);
-    
-    
+        
     printf("Checking orthonormality\nMatrix VT*V: \n");
     print_matrix(VTV);
     printf("Matrix UT*V: \n");
     print_matrix(UTU);
-    
-    
+        
     gsl_matrix_free(A);
     gsl_matrix_free(D);
     gsl_matrix_free(U);
@@ -127,12 +119,11 @@ void show_basic_func(){
     gsl_matrix_free(UTU);
     gsl_matrix_free(VTV);
     gsl_matrix_free(P);
-    gsl_matrix_free(tempM);
-    
+    gsl_matrix_free(tempM);    
 }
 void testing(){
     int n_tests = 10;
-    int a = 100, b = 300;
+    int a = 50, b = 250;
     printf("\n\n----- TESTING -----\n");
     printf("Testing SVD algorithm on multiple random tall matrices, A, size NxM (N>M).\nM in [%d, %d] and N = M + rand([%d, %d]) + 1\n", a, b, a, b);
     printf("Testing is done by checking orthonormality of U and V, that D is diagonal, and U*D*V^T = A\n");
@@ -153,23 +144,36 @@ void testing(){
 void timing(){
     FILE *timing_output = fopen("timing.out", "w");
     
-    const int runs = 50;
-    const int max_N = 500;
-    for(int n = 10; n<=max_N; n+=max_N/runs){
+    const int runs = 15;
+    const int max_N = 300;
+    for(int n = max_N/runs; n<=max_N; n+=max_N/runs){
+        fprintf(stderr, "timing n=%d\n", n);
         gsl_matrix *A = gsl_matrix_alloc(n, n);    
+        gsl_matrix *Acopy = gsl_matrix_alloc(n, n);
+        gsl_vector *S = gsl_vector_alloc(n);
         gsl_matrix *U = gsl_matrix_alloc(n, n);    
         gsl_matrix *V = gsl_matrix_alloc(n, n);
+        gen_rand_matrix(A);
+        gsl_matrix_memcpy(Acopy, A);
         
         clock_t start = clock();
         SVD_two_jaco_square(A, V, U);
         clock_t end = clock();
         int msec_my_algo = (double)(end-start) * 1000. / CLOCKS_PER_SEC;
         
-        fprintf(timing_output, "%d %d\n", n, msec_my_algo);
+        start = clock();
+        gsl_linalg_SV_decomp_jacobi(Acopy, V, S);
+        end = clock();
+        int msec_gsl = (double)(end-start) * 1000. / CLOCKS_PER_SEC;
+        
+        
+        fprintf(timing_output, "%d %d %d\n", n, msec_my_algo, msec_gsl);
         
         gsl_matrix_free(A);
+        gsl_matrix_free(Acopy);
         gsl_matrix_free(U);
         gsl_matrix_free(V);
+        gsl_vector_free(S);
     }
     fclose(timing_output);
 }
@@ -184,6 +188,7 @@ int main(int argc, char**argv){
     
     if(argc >= 2){
         if(strcmp(argv[1], "test") == 0){
+            show_basic_func();
             testing();
         } else if(strcmp(argv[1], "time") == 0){
             timing();
@@ -193,13 +198,6 @@ int main(int argc, char**argv){
         }
     } else{
         show_basic_func();
-        testing();
-        timing();
-    }
-    
-    printf("TODO:\n");
-    printf("Optimization\n");
-    printf("Compare with a gsl-implementation\n\n");
-    
+    }    
     return EXIT_SUCCESS; 
 }

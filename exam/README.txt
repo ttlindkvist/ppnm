@@ -8,7 +8,6 @@ Two sided Jacobi algorithm for SVD
 
 TODO:
 - Short report in LaTeX
-- Timing and graphs
 - Comparison with GSL
 - Optimization - rather slow implementation
 - Perhaps some use-case?
@@ -23,6 +22,12 @@ be decomposed into A=U*D*VT, where U and V are orthogonal matrices and D is a di
 A short report with the mathematics involved is found here (see report.pdf (TODO))
 
 Convergence: The criterion for convergence is when two successive sweeps produce the same diagonalized matrix (within machine precision).
+
+Computational cost: the algorithm cost is O(n^3) for a n*n matrix. This is depicted in the timing.png plot, where the implemented
+algorithm is timed across a range of square matrices - and as seen the time taken follows a n^x tendency, with x ≈ 3.
+
+Versus GSL: As seen from the timing plot - this implementation is MUCH slower than the one-sided algorithm implemented in GSL.
+Around 8-11 times slower in the usecases depiced here.
 
 
 --------- OUTPUT FROM PROGRAM (see also file output.out)  -----------
