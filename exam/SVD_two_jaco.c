@@ -46,28 +46,28 @@ int SVD_two_jaco_square(gsl_matrix *A, gsl_matrix *V, gsl_matrix *U){
         changes=0;
         sweeps++;
         //Sweep over upper triangle
-        for(int p=0;p<n-1;p++){
-            for(int q=p+1;q<n;q++){
-                //Check if diagonal elements change upon next rotation
-                old_app=gsl_matrix_get(A,p,p);
-                old_aqq=gsl_matrix_get(A,q,q);
+        for(int p=0; p<n-1; p++){
+            for(int q=p+1; q<n; q++){
+                //Store diagonal elements and check if they change upon rotation
+                old_app = gsl_matrix_get(A,p,p);
+                old_aqq = gsl_matrix_get(A,q,q);
 
                 //Calculate A <- J^T G^T A J 
-                apq=gsl_matrix_get(A,p,q);
-                aqp=gsl_matrix_get(A,q,p);
-                app=gsl_matrix_get(A,p,p);
-                aqq=gsl_matrix_get(A,q,q);
+                apq = gsl_matrix_get(A,p,q);
+                aqp = gsl_matrix_get(A,q,p);
+                app = old_app;
+                aqq = old_aqq;
 
                 //First symmetrizise the two off diagonal elements
-                givens_angle=atan2(apq-aqp, app+aqq);            //Angle for Givens matrix
+                givens_angle = atan2(apq-aqp, app+aqq);            //Angle for Givens matrix
                 Jtimes(A,p,q, -givens_angle);
 
-                apq=gsl_matrix_get(A,p,q);
-                app=gsl_matrix_get(A,p,p);
-                aqq=gsl_matrix_get(A,q,q);
+                apq = gsl_matrix_get(A,p,q);
+                app = gsl_matrix_get(A,p,p);
+                aqq = gsl_matrix_get(A,q,q);
 
                 //Then eliminate them
-                jacobi_angle=0.5*atan2(2*apq,aqq-app);            //Angle for Jacobi matrix
+                jacobi_angle = 0.5*atan2(2*apq,aqq-app);            //Angle for Jacobi matrix
                 timesJ(A,p,q,  jacobi_angle);
                 Jtimes(A,p,q, -jacobi_angle);
 
@@ -76,8 +76,8 @@ int SVD_two_jaco_square(gsl_matrix *A, gsl_matrix *V, gsl_matrix *U){
                 timesJ(U,p,q, givens_angle);
                 timesJ(U,p,q, jacobi_angle);
 
-                new_app=gsl_matrix_get(A,p,p);
-                new_aqq=gsl_matrix_get(A,q,q);
+                new_app = gsl_matrix_get(A,p,p);
+                new_aqq = gsl_matrix_get(A,q,q);
 
                 //Convergence criteria - the new diagonal elements must be equal to the old, after one sweep (within machine epsilon)
                 if(old_app != new_app || old_aqq != new_aqq){

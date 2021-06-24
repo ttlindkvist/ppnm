@@ -49,7 +49,6 @@ void schrodinger(double r, gsl_vector *y, gsl_vector *dydt){
 static double _hydrogen_min_r = 1e-3;
 static double _hydrogen_max_r = 8;
 void hydrogen(gsl_vector *x, gsl_vector *fx){
-    
     _schr_E = gsl_vector_get(x, 0);
     
     gsl_vector *fs = gsl_vector_alloc(2);
@@ -61,6 +60,22 @@ void hydrogen(gsl_vector *x, gsl_vector *fx){
     ode_driver_no_save(schrodinger, _hydrogen_min_r, _hydrogen_max_r, 1e-3, 1e-3, 1e-3, 0.1, fs);
 
     gsl_vector_set(fx, 0, gsl_vector_get(fs, 0));
+
+    gsl_vector_free(fs);
+}
+void hydrogen_improved_boundary(gsl_vector *x, gsl_vector *fx){
+    _schr_E = gsl_vector_get(x, 0);
+    
+    gsl_vector *fs = gsl_vector_alloc(2);
+
+    //Boundary condition f(r->0) = r-r*r
+    gsl_vector_set(fs, 0, _hydrogen_min_r-_hydrogen_min_r*_hydrogen_min_r);
+    gsl_vector_set(fs, 1, 1-2.*_hydrogen_min_r);
+
+    ode_driver_no_save(schrodinger, _hydrogen_min_r, _hydrogen_max_r, 1e-3, 1e-3, 1e-3, 0.1, fs);
+
+    //Improved boundary condition for f(r->infty) = r*e^(-kr), k=sqrt(-2E) gives correction to final function value
+    gsl_vector_set(fx, 0, gsl_vector_get(fs, 0) - _hydrogen_max_r*exp(-sqrt(-2*_schr_E)*_hydrogen_max_r));
 
     gsl_vector_free(fs);
 }
@@ -93,6 +108,9 @@ void partA(double eps){
     printf("Actual solution\nx1 = %.15g\nx2 = %.15g\n", 1., 1.);
 }
 void partB(double eps){
+    _hydrogen_min_r = 1e-3;
+    _hydrogen_max_r = 8;
+    
     int j_count = 0;
     double h_params[1] = {-2};
     gsl_vector_view h_view = gsl_vector_view_array(h_params, 1);
@@ -129,15 +147,43 @@ void partB(double eps){
 
     printf("\nThe calculated and exact wavefunction have been plotted to wavefunc.png\n");
 }
+void partC(double eps){
+    Function hydrogen_energy(hydrogen, 1);  
+    Function hydrogen_energy_improved(hydrogen_improved_boundary, 1);
+    int steps = 100;
+    double r_max_start = 1;
+    double r_max_end = 10;
+    
+    for(int i = 0; i<steps; i++){
+        double r_max = r_max_start + (r_max_end-r_max_start)/steps*i;  
+        
+        _hydrogen_max_r = r_max;
+        int j_count = 0;
+        int j_count2 = 0;
+        double h_params[1] = {-2};
+
+        gsl_vector_view h_view = gsl_vector_view_array(h_params, 1);
+        newton(hydrogen_energy, &h_view.vector, eps, j_count);
+        double E_old_bound = h_params[0];
+        
+        h_params[0] = -2;        
+        newton(hydrogen_energy_improved, &h_view.vector, eps, j_count2);
+        double E_new_bound = h_params[0];
+        
+        printf("rmax = %g - E_old = %.15g - E_new = %.15g\n", r_max, E_old_bound, E_new_bound);
+    }
+}
+
 
 int main(){
     printf("\nRoot finding\n");
     
-    printf("-------- PART A -------\n\n");
-    partA(1e-4);
+    // printf("-------- PART A -------\n\n");
+    // partA(1e-4);
 
-    printf("\n\n-------- PART B -------");
-    partB(1e-4);
+    // printf("\n\n-------- PART B -------");
+    // partB(1e-4);
 
-
+    printf("\n\n-------- PART C -------\n");
+    partC(1e-4);
 }

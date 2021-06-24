@@ -12,16 +12,15 @@
 
 //Testing algorithm on tall matrix with n>m
 complex test_SVD(int n, int m, double tau, double eps){
-    gsl_matrix *A = gsl_matrix_alloc(n, m);
+    gsl_matrix *A      = gsl_matrix_alloc(n, m);
     gsl_matrix *A_copy = gsl_matrix_alloc(n, m);
-    gsl_matrix *D = gsl_matrix_alloc(m, m);
-    gsl_matrix *U = gsl_matrix_alloc(n, m);
-    gsl_matrix *V = gsl_matrix_alloc(m, m);
-    gsl_matrix *UTU = gsl_matrix_alloc(m, m);
-    gsl_matrix *VTV = gsl_matrix_alloc(m, m);
-    
-    gsl_matrix *P = gsl_matrix_alloc(n, m);
-    gsl_matrix *tempM = gsl_matrix_alloc(n, m);
+    gsl_matrix *D      = gsl_matrix_alloc(m, m);
+    gsl_matrix *U      = gsl_matrix_alloc(n, m);
+    gsl_matrix *V      = gsl_matrix_alloc(m, m);
+    gsl_matrix *UTU    = gsl_matrix_alloc(m, m);
+    gsl_matrix *VTV    = gsl_matrix_alloc(m, m);
+    gsl_matrix *P      = gsl_matrix_alloc(n, m);
+    gsl_matrix *tempM  = gsl_matrix_alloc(n, m);
     
     
     gen_rand_matrix(A);
@@ -62,24 +61,18 @@ complex test_SVD(int n, int m, double tau, double eps){
     gsl_matrix_free(tempM);
     return err_code+I*sweeps;
 }
-void compare_GSL(){
-    
-}
 
 void show_basic_func(){   
     printf("Two-sided Jacobi alg. for SVD\n\n");
     
     int n = 7, m = 5;
-    gsl_matrix *A = gsl_matrix_alloc(n, m);    
-    gsl_matrix *D = gsl_matrix_alloc(m, m);    
-    gsl_matrix *U = gsl_matrix_alloc(n, m);    
-    gsl_matrix *V = gsl_matrix_alloc(m, m);
-    
-    gsl_matrix *UTU = gsl_matrix_alloc(m, m);
-    gsl_matrix *VTV = gsl_matrix_alloc(m, m);
-    
-    
-    gsl_matrix *P = gsl_matrix_alloc(n, m);
+    gsl_matrix *A     = gsl_matrix_alloc(n, m);
+    gsl_matrix *D     = gsl_matrix_alloc(m, m);
+    gsl_matrix *U     = gsl_matrix_alloc(n, m);
+    gsl_matrix *V     = gsl_matrix_alloc(m, m);
+    gsl_matrix *UTU   = gsl_matrix_alloc(m, m);
+    gsl_matrix *VTV   = gsl_matrix_alloc(m, m);
+    gsl_matrix *P     = gsl_matrix_alloc(n, m);
     gsl_matrix *tempM = gsl_matrix_alloc(n, m);
     
     gen_rand_matrix(A);
@@ -144,15 +137,15 @@ void testing(){
 void timing(){
     FILE *timing_output = fopen("timing.out", "w");
     
-    const int runs = 15;
-    const int max_N = 300;
+    const int runs = 25;
+    const int max_N = 250;
     for(int n = max_N/runs; n<=max_N; n+=max_N/runs){
         fprintf(stderr, "timing n=%d\n", n);
-        gsl_matrix *A = gsl_matrix_alloc(n, n);    
+        gsl_matrix *A     = gsl_matrix_alloc(n, n);    
         gsl_matrix *Acopy = gsl_matrix_alloc(n, n);
-        gsl_vector *S = gsl_vector_alloc(n);
-        gsl_matrix *U = gsl_matrix_alloc(n, n);    
-        gsl_matrix *V = gsl_matrix_alloc(n, n);
+        gsl_matrix *U     = gsl_matrix_alloc(n, n);    
+        gsl_matrix *V     = gsl_matrix_alloc(n, n);
+        gsl_vector *S     = gsl_vector_alloc(n);
         gen_rand_matrix(A);
         gsl_matrix_memcpy(Acopy, A);
         

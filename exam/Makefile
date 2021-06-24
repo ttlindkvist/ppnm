@@ -16,8 +16,8 @@ timing.png: timing.out Makefile
 	set tics out;\
 	set xlabel "N";\
 	set ylabel "Time [ms]";\
-	set xrange [0:300];\
-	set yrange [0:11000];\
+	set xrange [0:260];\
+	set yrange [0:7000];\
 	a=1;\
 	b=2;\
 	f(x)=a*x**b;\
