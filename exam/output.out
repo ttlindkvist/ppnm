@@ -22,13 +22,11 @@ Check UDV^T=A:
  0.5552310  0.7285463  0.6288739  0.7961281  0.5837158 
  0.2747664  0.8295981  0.9136800  0.9654021  0.2520848 
 Matrix D: 
- 0.0229702  0.2516272  0.5721931 -0.0583388  0.3654863 
- 0.1716612  0.3885632  0.3659877 -0.6321421 -0.2044974 
- 0.2504916  0.4336595 -0.5900264 -0.3837475  0.2076992 
- 0.5220429 -0.3304947  0.3142573  0.0187940  0.4220175 
- 0.6737742 -0.3340379 -0.0779066 -0.0852208 -0.4693341 
- 0.3810507  0.3043070 -0.2068063  0.4042457  0.4132773 
- 0.1885700  0.5331332  0.2071736  0.5279208 -0.4607496 
+ 0.2047131 -0.0000000 -0.0000000 -0.0000000  0.0000000 
+-0.0000000  0.4226660 -0.0000000  0.0000000  0.0000000 
+ 0.0000000 -0.0000000  0.5919544  0.0000000  0.0000000 
+-0.0000000  0.0000000 -0.0000000  1.1340104  0.0000000 
+-0.0000000 -0.0000000  0.0000000  0.0000000  3.0799361 
 Matrix V: 
 -0.4054365 -0.2399272  0.5001257  0.6038095  0.4041591 
  0.2041337  0.3063950  0.6122151 -0.5433797  0.4408885 
@@ -56,7 +54,32 @@ Matrix UT*V:
 -0.0000000 -0.0000000  1.0000000 -0.0000000 -0.0000000 
 -0.0000000  0.0000000 -0.0000000  1.0000000 -0.0000000 
 -0.0000000  0.0000000 -0.0000000 -0.0000000  1.0000000 
+
+
+----- TESTING -----
+Testing SVD on multiple random tall matrices, NxM (N>M).
+M in [100, 200] and N = M + rand([100, 200]) + 1
+Testing is done by checking orthonormality of U and V, that D is diagonal, and U*D*V^T = A
+Test 1 (size of matrix is 205 x 180):  	Success (code 0)
+Test 2 (size of matrix is 173 x 111):  	Success (code 0)
+Test 3 (size of matrix is 168 x 144):  	Success (code 0)
+Test 4 (size of matrix is 173 x 119):  	Success (code 0)
+Test 5 (size of matrix is 160 x 124):  	Success (code 0)
+Test 6 (size of matrix is 254 x 184):  	Success (code 0)
+Test 7 (size of matrix is 237 x 174):  	Success (code 0)
+Test 8 (size of matrix is 226 x 178):  	Success (code 0)
+Test 9 (size of matrix is 193 x 136):  	Success (code 0)
+Test 10 (size of matrix is 115 x 114):  	Success (code 0)
+Test 11 (size of matrix is 207 x 108):  	Success (code 0)
+Test 12 (size of matrix is 142 x 133):  	Success (code 0)
+Test 13 (size of matrix is 165 x 133):  	Success (code 0)
+Test 14 (size of matrix is 186 x 185):  	Success (code 0)
+Test 15 (size of matrix is 160 x 102):  	Success (code 0)
+Test 16 (size of matrix is 243 x 158):  	Success (code 0)
+Test 17 (size of matrix is 208 x 160):  	Success (code 0)
+Test 18 (size of matrix is 260 x 160):  	Success (code 0)
+Test 19 (size of matrix is 217 x 182):  	Success (code 0)
+Test 20 (size of matrix is 210 x 112):  	Success (code 0)
 TODO:
-Testing on large random NxM tall matrices
-Testing is done by checking orthogonality of U and V, diagonality of D, and comparing eigenvalues with a gsl-implementation
+Compare with a gsl-implementation
 

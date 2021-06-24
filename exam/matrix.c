@@ -88,6 +88,21 @@ int check_identity(gsl_matrix *A, double tau, double eps){
     }
     return 1;
 }
+int check_diagonal(gsl_matrix *A, double tau, double eps){
+    assert(A->size1==A->size2);
+    int n = A->size1;
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<n; j++){
+            if(i!=j){
+                double aij = gsl_matrix_get(A, i, j);
+                if(equals(0, aij, tau, eps) == 0){
+                    return 0;
+                } 
+            }
+        }
+    }
+    return 1;
+}
 void backsub(gsl_matrix *U, gsl_vector *c){
     assert(U->size1 == U->size2);
     int n = U->size1;
