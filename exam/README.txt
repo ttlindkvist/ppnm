@@ -22,4 +22,80 @@ be decomposed into A=U*D*VT, where U and V are orthogonal matrices and D is a di
 
 A short report with the mathematics involved is found here (see report.pdf (TODO))
 
-Convergence: The criterion for convergence is when two successive sweeps produce the same diagonalized matrix (within machine precision). 
+Convergence: The criterion for convergence is when two successive sweeps produce the same diagonalized matrix (within machine precision).
+
+
+--------- OUTPUT FROM PROGRAM (see also file output.out)  -----------
+
+EXAMINATION PROJECT 13
+AUTHOR: Thomas Toft Lindkvist
+AUID643642 - Student number: 201905635
+35 mod 22 = 13
+Two-sided Jacobi alg. for SVD
+
+Starting with 7x5 matrix: 
+ 0.0334699  0.3299642  0.6906357  0.4224867  0.2062651 
+ 0.2501285  0.6365585  0.8636224  0.3016556  0.0249239 
+ 0.3649927  0.7653810  0.3178603  0.1357284  0.1067453 
+ 0.7606716  0.0816723  0.5509562  0.5646519  0.7432705 
+ 0.9817601  0.2188498  0.4543959  0.5186540  0.5738417 
+ 0.5552310  0.7285463  0.6288739  0.7961281  0.5837158 
+ 0.2747664  0.8295981  0.9136800  0.9654021  0.2520848 
+SVD done with 6 sweeps
+Check UDV^T=A: 
+ 0.0334699  0.3299642  0.6906357  0.4224867  0.2062651 
+ 0.2501285  0.6365585  0.8636224  0.3016556  0.0249239 
+ 0.3649927  0.7653810  0.3178603  0.1357284  0.1067453 
+ 0.7606716  0.0816723  0.5509562  0.5646519  0.7432705 
+ 0.9817601  0.2188498  0.4543959  0.5186540  0.5738417 
+ 0.5552310  0.7285463  0.6288739  0.7961281  0.5837158 
+ 0.2747664  0.8295981  0.9136800  0.9654021  0.2520848 
+Matrix D: 
+ 0.2047131 -0.0000000 -0.0000000 -0.0000000  0.0000000 
+-0.0000000  0.4226660 -0.0000000  0.0000000  0.0000000 
+ 0.0000000 -0.0000000  0.5919544  0.0000000  0.0000000 
+-0.0000000  0.0000000 -0.0000000  1.1340104  0.0000000 
+-0.0000000 -0.0000000  0.0000000  0.0000000  3.0799361 
+Matrix V: 
+-0.4054365 -0.2399272  0.5001257  0.6038095  0.4041591 
+ 0.2041337  0.3063950  0.6122151 -0.5433797  0.4408885 
+ 0.0806004 -0.6978795 -0.3410564 -0.3054001  0.5448661 
+-0.4429836  0.5693436 -0.4878287  0.0038263  0.4915506 
+ 0.7689082  0.1933110 -0.1441204  0.4968589  0.3221361 
+Matrix U: 
+ 0.3951709 -0.2566993 -0.4267653 -0.2344823  0.2628066 
+-0.0797416 -0.6887586  0.1174316 -0.3924792  0.3274774 
+ 0.2727241  0.0544643  0.7789711 -0.2107779  0.2465174 
+ 0.3617286 -0.1817502 -0.2365868  0.5450749  0.3768349 
+-0.5142120 -0.1878265  0.2268678  0.5486792  0.3833392 
+ 0.3441380  0.5139727  0.0620510  0.0356160  0.4765146 
+-0.4994100  0.3525206 -0.2932449 -0.3835712  0.4968910 
+Checking orthonormality
+Matrix VT*V: 
+ 1.0000000  0.0000000 -0.0000000 -0.0000000 -0.0000000 
+ 0.0000000  1.0000000  0.0000000 -0.0000000 -0.0000000 
+-0.0000000  0.0000000  1.0000000  0.0000000 -0.0000000 
+-0.0000000 -0.0000000  0.0000000  1.0000000  0.0000000 
+-0.0000000 -0.0000000 -0.0000000  0.0000000  1.0000000 
+Matrix UT*V: 
+ 1.0000000  0.0000000 -0.0000000 -0.0000000 -0.0000000 
+ 0.0000000  1.0000000 -0.0000000  0.0000000  0.0000000 
+-0.0000000 -0.0000000  1.0000000 -0.0000000 -0.0000000 
+-0.0000000  0.0000000 -0.0000000  1.0000000 -0.0000000 
+-0.0000000  0.0000000 -0.0000000 -0.0000000  1.0000000 
+
+
+----- TESTING -----
+Testing SVD algorithm on multiple random tall matrices, A, size NxM (N>M).
+M in [100, 300] and N = M + rand([100, 300]) + 1
+Testing is done by checking orthonormality of U and V, that D is diagonal, and U*D*V^T = A
+Test 1 (size of A is 205 x 180) with 10 sweeps:  	Success (code 0)
+Test 2 (size of A is 273 x 211) with 9 sweeps:  	Success (code 0)
+Test 3 (size of A is 305 x 141) with 9 sweeps:  	Success (code 0)
+Test 4 (size of A is 289 x 207) with 9 sweeps:  	Success (code 0)
+Test 5 (size of A is 308 x 235) with 9 sweeps:  	Success (code 0)
+Test 6 (size of A is 232 x 223) with 9 sweeps:  	Success (code 0)
+Test 7 (size of A is 349 x 274) with 9 sweeps:  	Success (code 0)
+Test 8 (size of A is 310 x 220) with 10 sweeps:  	Success (code 0)
+Test 9 (size of A is 338 x 290) with 10 sweeps:  	Success (code 0)
+Test 10 (size of A is 454 x 290) with 10 sweeps:  	Success (code 0)

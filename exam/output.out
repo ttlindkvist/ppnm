@@ -57,29 +57,20 @@ Matrix UT*V:
 
 
 ----- TESTING -----
-Testing SVD on multiple random tall matrices, NxM (N>M).
-M in [100, 200] and N = M + rand([100, 200]) + 1
+Testing SVD algorithm on multiple random tall matrices, A, size NxM (N>M).
+M in [100, 300] and N = M + rand([100, 300]) + 1
 Testing is done by checking orthonormality of U and V, that D is diagonal, and U*D*V^T = A
-Test 1 (size of matrix is 205 x 180):  	Success (code 0)
-Test 2 (size of matrix is 173 x 111):  	Success (code 0)
-Test 3 (size of matrix is 168 x 144):  	Success (code 0)
-Test 4 (size of matrix is 173 x 119):  	Success (code 0)
-Test 5 (size of matrix is 160 x 124):  	Success (code 0)
-Test 6 (size of matrix is 254 x 184):  	Success (code 0)
-Test 7 (size of matrix is 237 x 174):  	Success (code 0)
-Test 8 (size of matrix is 226 x 178):  	Success (code 0)
-Test 9 (size of matrix is 193 x 136):  	Success (code 0)
-Test 10 (size of matrix is 115 x 114):  	Success (code 0)
-Test 11 (size of matrix is 207 x 108):  	Success (code 0)
-Test 12 (size of matrix is 142 x 133):  	Success (code 0)
-Test 13 (size of matrix is 165 x 133):  	Success (code 0)
-Test 14 (size of matrix is 186 x 185):  	Success (code 0)
-Test 15 (size of matrix is 160 x 102):  	Success (code 0)
-Test 16 (size of matrix is 243 x 158):  	Success (code 0)
-Test 17 (size of matrix is 208 x 160):  	Success (code 0)
-Test 18 (size of matrix is 260 x 160):  	Success (code 0)
-Test 19 (size of matrix is 217 x 182):  	Success (code 0)
-Test 20 (size of matrix is 210 x 112):  	Success (code 0)
+Test 1 (size of A is 205 x 180) with 10 sweeps:  	Success (code 0)
+Test 2 (size of A is 273 x 211) with 9 sweeps:  	Success (code 0)
+Test 3 (size of A is 305 x 141) with 9 sweeps:  	Success (code 0)
+Test 4 (size of A is 289 x 207) with 9 sweeps:  	Success (code 0)
+Test 5 (size of A is 308 x 235) with 9 sweeps:  	Success (code 0)
+Test 6 (size of A is 232 x 223) with 9 sweeps:  	Success (code 0)
+Test 7 (size of A is 349 x 274) with 9 sweeps:  	Success (code 0)
+Test 8 (size of A is 310 x 220) with 10 sweeps:  	Success (code 0)
+Test 9 (size of A is 338 x 290) with 10 sweeps:  	Success (code 0)
+Test 10 (size of A is 454 x 290) with 10 sweeps:  	Success (code 0)
 TODO:
+Optimization
 Compare with a gsl-implementation
 
