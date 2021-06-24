@@ -20,6 +20,7 @@ void gen_rand_symm_matrix(gsl_matrix *A);
 void timesJ(gsl_matrix *A, int p, int q, double theta);
 void Jtimes(gsl_matrix *A, int p, int q, double theta);
 
+int SVD_two_jaco(gsl_matrix *A, gsl_matrix *R, gsl_matrix *V, gsl_matrix *U);
 int SVD_two_jaco_square(gsl_matrix *A, gsl_matrix *V, gsl_matrix *U);
 
 #endif

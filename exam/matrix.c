@@ -105,6 +105,9 @@ void GS_decomp(gsl_matrix *A, gsl_matrix *R){
     assert(R->size1==R->size2 && R->size1 == m);
     assert(n>=m);
     
+    //Reset R
+    gsl_matrix_set_all(R, 0);
+    
     for(int i = 0; i<m; i++){
         gsl_vector_view a_i = gsl_matrix_column(A, i);
         

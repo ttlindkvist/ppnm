@@ -96,3 +96,22 @@ int SVD_two_jaco_square(gsl_matrix *A, gsl_matrix *V, gsl_matrix *U){
     }    
 	return sweeps;
 }
+
+//SVD on general tall matrix - A is destroyed in the process.
+//Or rather transformed in to Q of the QR factorization of A.
+int SVD_two_jaco(gsl_matrix *A, gsl_matrix *D, gsl_matrix *V, gsl_matrix *U){
+    assert(A->size1>A->size2);
+    
+    //First QR-factorize A = Q*R, with R=D
+    GS_decomp(A, D);
+    
+    //SVD on square matrix R=U*R*VT
+    gsl_matrix *Uprime = gsl_matrix_alloc(A->size2, A->size2);
+    int sweeps = SVD_two_jaco_square(D, V, Uprime);
+    
+    //Transforming U <- Q*U'
+    gsl_blas_dgemm(CblasNoTrans, CblasNoTrans, 1, A, Uprime, 0, U);
+    
+    gsl_matrix_free(Uprime);
+    return sweeps;
+}
