@@ -1,14 +1,11 @@
-Examination project 13
+Examination project 13 - Two sided Jacobi algorithm for SVD
 
 Author: Thomas Toft Lindkvist
 AUID 643642 - Student number 201905635
 35 mod 22 = 13
 
-Two sided Jacobi algorithm for SVD
-
 TODO:
 - Short report in LaTeX
-- Comparison with GSL
 - Optimization - rather slow implementation
 - Perhaps some use-case?
 
@@ -19,7 +16,7 @@ non-square matrix, could we generalize the known algorithm? It turns out the ans
 The two sided Jacobi algorithm is such a generalization. Any tall matrix A can, via the implemented algorithm, 
 be decomposed into A=U*D*VT, where U and V are orthogonal matrices and D is a diagonal matrix containing the singular values of A.
 
-A short report with the mathematics involved is found here (see report.pdf (TODO))
+A short report with the mathematics involved is found here - see report.pdf
 
 Convergence: The criterion for convergence is when two successive sweeps produce the same diagonalized matrix (within machine precision).
 

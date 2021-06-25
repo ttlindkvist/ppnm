@@ -7,6 +7,10 @@ LDLIBS = $(shell gsl-config --libs)
 all: output.out timing.png
 	cat $<
 
+report.pdf: report.tex timing.png
+	pdflatex $<
+	pdflatex $<
+
 timing.png: timing.out Makefile
 	echo '\
 	set terminal png;\
@@ -42,4 +46,4 @@ timing.out: main
 main: main.o matrix.o SVD_two_jaco.o
 
 clean:
-	$(RM) main *.o *.out *.png
+	$(RM) main *.o *.out *.png *.pdf *.log *.aux
