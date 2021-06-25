@@ -116,7 +116,7 @@ void partB(double eps){
     gsl_vector_view h_view = gsl_vector_view_array(h_params, 1);
 
     Function hydrogen_energy(hydrogen, 1);
-    printf("\n\nBound state of hydrogen via shooting method and initial guess of E=%g\n", h_params[0]);
+    printf("\n\nBound state of hydrogen via shooting method and initial guess of E=%g, and an r_max=8\n", h_params[0]);
     printf("eps = %g\n\n", eps);
     
     newton(hydrogen_energy, &h_view.vector, eps, j_count);
@@ -148,10 +148,11 @@ void partB(double eps){
     printf("\nThe calculated and exact wavefunction have been plotted to wavefunc.png\n");
 }
 void partC(double eps){
+    FILE *output_convergence = fopen("convergence.out", "w");
     Function hydrogen_energy(hydrogen, 1);  
     Function hydrogen_energy_improved(hydrogen_improved_boundary, 1);
     int steps = 100;
-    double r_max_start = 1;
+    double r_max_start = 0.9;
     double r_max_end = 10;
     
     for(int i = 0; i<steps; i++){
@@ -170,19 +171,22 @@ void partC(double eps){
         newton(hydrogen_energy_improved, &h_view.vector, eps, j_count2);
         double E_new_bound = h_params[0];
         
-        printf("rmax = %g - E_old = %.15g - E_new = %.15g\n", r_max, E_old_bound, E_new_bound);
+        fprintf(output_convergence, "%.15g %.15g %.15g %.15g\n", r_max, E_old_bound, E_new_bound, -0.5);
     }
+    fclose(output_convergence);
+    
+    printf("\nConvergence of solution for different r_max for the two boundary conditions can be seen in the plot convergence.png\n");
+    printf("As seen the new boundary condition allows for much smaller r_max to be used (r_max<<8)\n");
 }
-
 
 int main(){
     printf("\nRoot finding\n");
     
-    // printf("-------- PART A -------\n\n");
-    // partA(1e-4);
+    printf("-------- PART A -------\n\n");
+    partA(1e-4);
 
-    // printf("\n\n-------- PART B -------");
-    // partB(1e-4);
+    printf("\n\n-------- PART B -------");
+    partB(1e-4);
 
     printf("\n\n-------- PART C -------\n");
     partC(1e-4);
