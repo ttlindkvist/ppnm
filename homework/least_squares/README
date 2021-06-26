@@ -1,4 +1,6 @@
-
+Part A, B and C done. Figure 'fit_plot.png' show the fit with uncertainty.
+Output from program:
+-------
 Loading datapoints from data.in
 
 Fit data to ln(y) = c_0 + c_1*x => y = exp(c_0)*exp(c_1*x) = a*exp(-gamma*x)
@@ -18,3 +20,4 @@ Half-life for 224Ra = 3.63 d
 Which is not terribly far away from our fitted value.
 However it still outside the estimated uncertainty.
 From fig_plot.png the points is seen together with the range specified by (c+-delta c)
+-----------

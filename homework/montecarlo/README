@@ -1,0 +1,58 @@
+Part A and B done. 
+Plot of error comparison between quasi- and pseudorandom sequences in 'errorplot.png'
+
+
+Program output:
+Monte Carlo integration
+
+----------- Part A - plain monte carlo integration
+
+Calculating area of circle with radius 0.900000000000000
+N = 1000000
+Calculated to:   2.545380000000000
+Exact result:    2.544690049407733
+Estimated error: 0.001924203901773
+Actual error:    0.000689950592268
+
+Calculating volume of sphere with radius 1
+N = 1000000
+Calculated to:   4.193320000000000
+Exact result:    4.188790204786391
+Estimated error: 0.003995325691054
+Actual error:    0.004529795213609
+
+Calculating int (1-cos(x)cos(y)cos(z))^-1 with x,y,z=(0, pi)
+N = 1000000
+Calculated to:   44.479432735443432
+Exact result:    43.198066515912686
+Estimated error: 1.236029100961170
+Actual error:    1.281366219530746
+
+
+----------- Part B ---------
+Same functions but now this low-discrepancy (Halton) sequences
+
+Calculating area of circle with radius 0.900000000000000
+N = 1000000
+Calculated to:   2.544656000000000
+Exact result:    2.544690049407733
+Estimated error: 0.000080000000000
+Actual error:    0.000034049407733
+
+Calculating volume of sphere with radius 1
+N = 1000000
+Calculated to:   4.189000000000000
+Exact result:    4.188790204786391
+Estimated error: 0.000944000000000
+Actual error:    0.000209795213610
+
+Calculating int (1-cos(x)cos(y)cos(z))^-1 with x,y,z=(0, pi)
+N = 1000000
+Calculated to:   42.826468756757855
+Exact result:    43.198066515912686
+Estimated error: 0.026284978963225
+Actual error:    0.371597759154831
+
+As seen the error is about one order of magnitude lower for the Halton sequences
+The error comparison is done on the area of circle
+

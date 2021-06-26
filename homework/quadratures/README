@@ -1,0 +1,131 @@
+Part A, B and C done. See program output:
+------ PART A ------ 
+All integrals calculated with recursive adaptive integrator
+Absolute precision 0.0001 - Relative precision 0.0001
+int sqrt(x) from 0 to 1
+Calculated to     0.6666809328937376
+Exact result      0.6666666666666666
+Estimated error   0.0000717421380949
+Actual error      0.0000142662270710
+with 40 function evaluations
+
+int 4*sqrt(1-x*x) from 0 to 1
+Calculated to     3.1415975077026306
+Exact result      3.1415926535897931
+Estimated error   0.0001346597780285
+Actual error      0.0000048541128375
+with 80 function evaluations
+
+int 1/sqrt(x) from 0 to 1
+Calculated to     1.9999973879640278
+Exact result      2.0000000000000000
+Estimated error   0.0000770897793162
+Actual error      0.0000026120359722
+with 17140 function evaluations
+
+int ln(x)/sqrt(x) from 0 to 1
+Calculated to     -3.9999983489902089
+Exact result      -4.0000000000000000
+Estimated error   0.0000809348853471
+Actual error      0.0000016510097911
+with 29972 function evaluations
+
+
+------ PART B ------
+
+int 1/sqrt(x) from 0 to 1 - using Clenshaw-Curtis transformation
+Calculated to     1.9999998903107012
+Exact result      2.0000000000000000
+Estimated error   0.0000690012046991
+Actual error      0.0000001096892988
+with 52 function evaluations
+
+int ln(x)/sqrt(x) from 0 to 1 - using Clenshaw-Curtis transformation
+Calculated to     -3.9999981333960255
+Exact result      -4.0000000000000000
+Estimated error   0.0000872530707647
+Actual error      0.0000018666039745
+with 272 function evaluations
+
+As seen the CC transformation results in much fewer function evaluations
+Also, the error seems to be on the same order or lower (at a first glance)
+
+Evaluating 4*sqrt(1-x*x) with and without Clenshaw-Curtis with
+Absolute precision 1e-10 - Relative precision 1e-10
+
+int 4*sqrt(1-x*x) from 0 to 1
+Calculated to     3.1415926535897993
+Exact result      3.1415926535897931
+Estimated error   0.0000000000452468
+Actual error      0.0000000000000062
+with 25748 function evaluations
+
+int 4*sqrt(1-x*x) from 0 to 1 - using CC transformation
+Calculated to     3.1415926535897931
+Exact result      3.1415926535897931
+Estimated error   0.0000000000693092
+Actual error      0.0000000000000000
+with 30540 function evaluations
+
+As seen the CC transformation results in lower overall error, even with the same abs and eps supplied, with around the same number of function evaluations
+
+
+Comparing to the GSL implementation
+
+int 1/sqrt(x) from 0 to 1
+Calculated to    1.9999999999999984
+Exact result     2.0000000000000000
+Estimated error  0.0000000000000058
+Actual error     0.0000000000000016
+with 231 function evaluations
+
+int ln(x)/sqrt(x) from 0 to 1
+Calculated to   -4.0000000000000853
+Exact result    -4.0000000000000000
+Estimated error  0.0000000000001354
+Actual error     0.0000000000000853
+with 315 function evaluations
+
+Even though the GSL implementation uses more integrand evaluations, the error is many orders of magnitude lower.
+Despite the abs and eps supplied are the same
+
+------ PART C ------
+
+As seen above the implemented integrator returns its estimate of the integration error
+On should also note that this estimate always will be larger than the actual error
+
+Test on infinite integrals
+
+int exp(-x*x) from -infty to infty
+Calculated to     1.7723741460631461
+Exact result      1.7724538509055159
+Estimated error   0.0000825989824397
+Actual error      0.0000797048423697
+with 176 function evaluations
+
+int exp(-x)*cos(x) from 0 to infty
+Calculated to     0.5000174110892075
+Exact result      0.5000000000000000
+Estimated error   0.0000529272745351
+Actual error      0.0000174110892075
+with 132 function evaluations
+
+Comparing to the GSL implementation
+
+int exp(-x*x) from -infty to infty
+Calculated to    1.7724538509067373
+Exact result     1.7724538509055159
+Estimated error  0.0000043163646716
+Actual error     0.0000000000012215
+with 150 function evaluations
+
+int exp(-x)*cos(x) from 0 to infty
+Calculated to   0.5000000000070501
+Exact result    0.5000000000000000
+Estimated error 0.0000004321921842
+Actual error    0.0000000000070501
+with 135 function evaluations
+
+Again the GSL implementation uses around the same number of integrand evaluations
+But the error is many orders of magnitude lower.
+Despite the abs and eps supplied are the same

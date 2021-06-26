@@ -1,0 +1,48 @@
+Part A, B and C done.
+For part B - see plot 'wavefunc.png' for hydrogen gs wavefunction
+For part C - see plot 'convergence.png' for a comparison between the two
+boundary conditions
+
+Program output:
+Root finding
+-------- PART A -------
+
+Solving {cos(x)sin(y), cos(y)}=0 with initial guess (x,y) = (1, 1)
+eps = 0.0001
+
+x1 = 1.5707963267949
+x2 = 1.5707963267949
+With 4 jacobi evaluations
+Actual solution
+x1 = 1.5707963267949
+x2 = 1.5707963267949
+
+
+Finding extrema of rosenbrock with initial guess (0.5, 0.5)
+eps = 0.0001
+
+x1 = 0.999995522233819
+x2 = 0.999991037037078
+With 160 hessian evaluations
+Actual solution
+x1 = 1
+x2 = 1
+
+
+-------- PART B -------
+
+Bound state of hydrogen via shooting method and initial guess of E=-2, and an r_max=8
+eps = 0.0001
+
+E = -0.499972974318284
+With 14 jacobi evaluations
+Actual solution
+E = -0.5
+
+The calculated and exact wavefunction have been plotted to wavefunc.png
+
+
+-------- PART C -------
+
+Convergence of solution for different r_max for the two boundary conditions can be seen in the plot convergence.png
+As seen the new boundary condition allows for much smaller r_max to be used (r_max<<8)

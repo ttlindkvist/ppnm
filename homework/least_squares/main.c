@@ -130,6 +130,6 @@ int main(){
         fprintf(output, "%g %g\n", x, (a-a_err)*exp(-(g+g_err)*x));
     }
     fclose(output);
-    printf("As seen from the figure fig_plot.png, a few points lie outside the range specified by (c+-delta c), but most lie inside.\n");
+    printf("From fig_plot.png the points is seen together with the range specified by (c+-delta c)\n");
     return 0;
 }
