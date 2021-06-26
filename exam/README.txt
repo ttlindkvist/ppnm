@@ -4,11 +4,6 @@ Author: Thomas Toft Lindkvist
 AUID 643642 - Student number 201905635
 35 mod 22 = 13
 
-TODO:
-- Short report in LaTeX
-- Optimization - rather slow implementation
-- Perhaps some use-case?
-
 ------------ DESCRIPTION ------------
 As explored in this class, the elementary Jacobi eigenvalue algorithm only works on symmetric matrices.
 But suppose we wanted to find the eigenvalues of a non-symmetric matrix, or the singular values of a 
@@ -16,12 +11,13 @@ non-square matrix, could we generalize the known algorithm? It turns out the ans
 The two sided Jacobi algorithm is such a generalization. Any tall matrix A can, via the implemented algorithm, 
 be decomposed into A=U*D*VT, where U and V are orthogonal matrices and D is a diagonal matrix containing the singular values of A.
 
-A short report with the mathematics involved is found here - see report.pdf
+A short report with the mathematics involved is found in report.pdf
 
 Convergence: The criterion for convergence is when two successive sweeps produce the same diagonalized matrix (within machine precision).
 
-Computational cost: the algorithm cost is O(n^3) for a n*n matrix. This is depicted in the timing.png plot, where the implemented
-algorithm is timed across a range of square matrices - and as seen the time taken follows a n^x tendency, with x ≈ 3.
+Computational cost: the algorithm cost is O(n^3) for a n*n matrix - loop over upper triangle is O(n^2) and the update is O(n). 
+This is depicted in the timing.png plot, where the implemented algorithm is timed across a range of square matrices 
+- and as seen the fit shows a n^x tendency, with x ≈ 3.
 
 Versus GSL: As seen from the timing plot - this implementation is MUCH slower than the one-sided algorithm implemented in GSL.
 Around 8-11 times slower in the usecases depicted here.
@@ -73,13 +69,13 @@ Matrix U:
  0.3441380  0.5139727  0.0620510  0.0356160  0.4765146 
 -0.4994100  0.3525206 -0.2932449 -0.3835712  0.4968910 
 Checking orthonormality
-Matrix VT*V: 
+Matrix V^T*V: 
  1.0000000  0.0000000 -0.0000000 -0.0000000 -0.0000000 
  0.0000000  1.0000000  0.0000000 -0.0000000 -0.0000000 
 -0.0000000  0.0000000  1.0000000  0.0000000 -0.0000000 
 -0.0000000 -0.0000000  0.0000000  1.0000000  0.0000000 
 -0.0000000 -0.0000000 -0.0000000  0.0000000  1.0000000 
-Matrix UT*V: 
+Matrix U^T*V: 
  1.0000000  0.0000000 -0.0000000 -0.0000000 -0.0000000 
  0.0000000  1.0000000 -0.0000000  0.0000000  0.0000000 
 -0.0000000 -0.0000000  1.0000000 -0.0000000 -0.0000000 
@@ -89,15 +85,15 @@ Matrix UT*V:
 
 ----- TESTING -----
 Testing SVD algorithm on multiple random tall matrices, A, size NxM (N>M).
-M in [100, 300] and N = M + rand([100, 300]) + 1
+M in [50, 250] and N = M + rand([50, 250]) + 1
 Testing is done by checking orthonormality of U and V, that D is diagonal, and U*D*V^T = A
-Test 1 (size of A is 205 x 180) with 10 sweeps:  	Success (code 0)
-Test 2 (size of A is 273 x 211) with 9 sweeps:  	Success (code 0)
-Test 3 (size of A is 305 x 141) with 9 sweeps:  	Success (code 0)
-Test 4 (size of A is 289 x 207) with 9 sweeps:  	Success (code 0)
-Test 5 (size of A is 308 x 235) with 9 sweeps:  	Success (code 0)
-Test 6 (size of A is 232 x 223) with 9 sweeps:  	Success (code 0)
-Test 7 (size of A is 349 x 274) with 9 sweeps:  	Success (code 0)
-Test 8 (size of A is 310 x 220) with 10 sweeps:  	Success (code 0)
-Test 9 (size of A is 338 x 290) with 10 sweeps:  	Success (code 0)
-Test 10 (size of A is 454 x 290) with 10 sweeps:  	Success (code 0)
+Test 1 (size of A is 155 x 130) with 9 sweeps:  	Success (code 0)
+Test 2 (size of A is 211 x 150) with 9 sweeps:  	Success (code 0)
+Test 3 (size of A is 246 x 156) with 9 sweeps:  	Success (code 0)
+Test 4 (size of A is 286 x 123) with 9 sweeps:  	Success (code 0)
+Test 5 (size of A is 226 x 171) with 9 sweeps:  	Success (code 0)
+Test 6 (size of A is 324 x 135) with 9 sweeps:  	Success (code 0)
+Test 7 (size of A is 387 x 222) with 9 sweeps:  	Success (code 0)
+Test 8 (size of A is 182 x 92) with 9 sweeps:  	    Success (code 0)
+Test 9 (size of A is 88 x 66) with 8 sweeps:  	    Success (code 0)
+Test 10 (size of A is 268 x 83) with 9 sweeps:  	Success (code 0)

@@ -8,8 +8,9 @@
 \date{}
 \begin{document}
     \maketitle
+    \noindent
     Since my student number ends with 35, I have been tasked with project $ 35 \mod 22 = 13 $.
-    My repository, wherein the examination project lies, can be found at \url{https://github.com/ttlindkvist/ppnm/} .
+    My repository, wherein the examination project lies, can be found at \url{https://github.com/ttlindkvist/ppnm/}.
     I have done testing to ensure correctness and timed the algorithm to visualize the $ O(n^3) $ operational cost.
     
     \section{Elementary Jacobi diagonalization}
@@ -19,10 +20,10 @@
     \end{align}
 	This can be done by sweeping across the upper triangle of the matrix cyclically, eliminating off-diagonal elements one-by-one, by a well-tuned Jacobi rotation $ J(p,q) $ eliminating element $ A_{pq}=A_{qp} $.
 	\begin{align}
-		A \to A' = J(p,q)^T A J(p,q)
+		A \to J(p,q)^T A J(p,q)
 	\end{align}
 	
-	But what if we want to find the singular values of a non-symmetric, square matrix? Can we reuse some of what we know from this method? It turns out the answer is yes! But first what is SVD.
+	But what if we want to find the singular values of a non-symmetric, square matrix? Can we reuse some of what we know from this method? It turns out the answer is yes! But first what is SVD?
 	
 	\section{SVD}
 	The singular value decomposition (SVD) of a matrix $ A $ is a factorization of the matrix on the form
@@ -35,10 +36,45 @@
     \section{Two-sided Jacobi method}
     Many parts of the Jacobi algorithm for the symmetric case can be reused! 
     \subsection{Square matrices}
-    In fact the only modification necessary 
-    
-    TODO: PROOF than the Givens angle is what it is!
-    
+    In fact the only modification necessary is a Givens rotation symmetrizing the two off-diagonal elements, that are to be eliminated by the following Jacobi transformation
+    \begin{align}
+    	A\to J(p,q)^T \left(G^T(p,q)A\right) J(p,q)
+    \end{align}
+	The matrices $ U $ and $ V $ are updated in accordance with transformations on the left and right side of $ A $.
+	\begin{align}
+		U\to UGJ\\
+		V\to VJ
+	\end{align}
+	With $ U $ and $ V $ initialized to identity. This process is, just like the Jacobi diagonalization of a symmetric matrix, repeated over all non-diagonal elements of the matrix, called a sweep, until two consecutive sweeps leave the diagonal elements unchanged, and we are left with the SVD for $ A =UDV^T$.
+	
+    The angle of the Givens rotation can be found by first looking at the 2x2 case:
+    \begin{align}
+    	A &= \begin{pmatrix}
+    		a & b\\
+    		c & d
+    	\end{pmatrix}\\
+    G^T(\theta) A &= \begin{pmatrix}
+    	\cos\theta & -\sin\theta\\
+    	\sin\theta & \cos\theta
+    \end{pmatrix}\begin{pmatrix}
+    a & b\\
+    c & d
+	\end{pmatrix} = \begin{pmatrix}
+	a\cos\theta - c\sin\theta  & b\cos\theta - d\sin\theta\\
+	a\sin\theta + c\cos\theta & b\sin\theta + d\cos\theta
+\end{pmatrix}
+    \end{align}
+    Require off-diagonals to be equal
+    \begin{align}
+    	b\cos\theta - d\sin\theta &= a\sin\theta + c\cos\theta\\
+    	\sin\theta (a + d) &= \cos\theta (b - c)\\
+    	\tan\theta &= \frac{b-c}{a+d}
+    \end{align}
+	Which generalizes to the case of symmetrizing two off-diagonal elements, $ A_{pq} $ and $ A_{qp} $, in a arbitrarily sized square matrix $ A $.
+	\begin{align}
+		\tan\theta = \frac{A_{pq} - A_{qp}}{A_{pp} + A_{qq}}
+	\end{align}
+
     \subsection{Tall matrices}
     For tall matrices $ A $ of size $ N\times M $, $ N\geq M $, a small adjustment has to be made. First a QR-factorization is necessary, and is done using my own Gram-Schmidt implementation from a homework
     \begin{align}
@@ -63,7 +99,7 @@
     Testing is done by generating a bunch of large, tall matrices, and checking if the resulting $ U $ and $ V $ are orthogonal (by checking $ U^TU $ and $ V^TV $ is identity), and by checking that $ D $ is diagonal. Then, by definition, the algorithm must be producing the correct output. 
     
     \section{Computational cost}
-    Just as the algorithm for symmetric matrices, the cyclic method for SVD is an $ O(n^3) $ operation as seen on figure \ref{fig:timing}. A fit to the time taken to SVD different sized random square matrices, shows the $ O(n^3) $ cost.
+    Just as the algorithm for symmetric matrices, the cyclic method for SVD is an $ O(n^3) $ operation as seen on figure \ref{fig:timing}. This stems from the fact that a loop over the upper triangle of a matrix is an $ O(n^2) $ operation and the following update is an $ O(n) $ operation. A fit to the time taken to SVD different sized random square matrices, shows the $ O(n^3) $ cost.
     What is also seen is a comparison with the GSL implementation of a one-sided Jacobi algorithm - which is around 8-11 times faster in these use-cases.
     \begin{figure}
     	\includegraphics{timing.png}
