@@ -18,7 +18,7 @@ timing.png: timing.out Makefile
 	set xlabel "N";\
 	set ylabel "Time [ms]";\
 	set xrange [200:800];\
-	set yrange [0:1000];\
+	set yrange [0:700];\
 	a=1;\
 	b=1;\
 	f(x)=a*x**b;\
