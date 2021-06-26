@@ -175,7 +175,7 @@ int main(){
     printf("\n\n------------- PART C  -------------\n\nTiming output sent to timing.out\n");
     FILE *toutput = fopen("timing.out", "w");
     
-    for(int i = 20; i<=80; i++){
+    for(int i = 20; i<=80; i+=2){
         int n = 10*i;
         gsl_matrix *A = gsl_matrix_alloc(n, n);
         gsl_matrix *R = gsl_matrix_alloc(n, n);

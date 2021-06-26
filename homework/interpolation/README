@@ -1,0 +1,4 @@
+Part A, B and C have been done - ie. linear, quadratic and cubic spline.
+Figures showing this together with GSL implementation can be found in 
+the 'figs' folder. It shows that the GSL implementation produces an
+identical result.

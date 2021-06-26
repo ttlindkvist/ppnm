@@ -6,17 +6,17 @@ AUID 643642 - Student number 201905635
 
 ------------ DESCRIPTION ------------
 As explored in this class, the elementary Jacobi eigenvalue algorithm only works on symmetric matrices.
-But suppose we wanted to find the eigenvalues of a non-symmetric matrix, or the singular values of a 
-non-square matrix, could we generalize the known algorithm? It turns out the answer is yes! 
-The two sided Jacobi algorithm is such a generalization. Any tall matrix A can, via the implemented algorithm, 
-be decomposed into A=U*D*VT, where U and V are orthogonal matrices and D is a diagonal matrix containing the singular values of A.
+But suppose we wanted to find the singular values of an arbitrary real matrix matrix, could we generalize the known algorithm?
+It turns out the answer is yes! The two sided Jacobi algorithm is such a generalization. Any tall matrix A can, 
+via the implemented algorithm, be decomposed into A=U*D*VT, where U and V are orthogonal matrices and D is a diagonal matrix 
+containing the singular values of A.
 
 A short report with the mathematics involved is found in report.pdf
 
 Convergence: The criterion for convergence is when two successive sweeps produce the same diagonalized matrix (within machine precision).
 
-Computational cost: the algorithm cost is O(n^3) for a n*n matrix - loop over upper triangle is O(n^2) and the update is O(n). 
-This is depicted in the timing.png plot, where the implemented algorithm is timed across a range of square matrices 
+Computational cost: the algorithm cost is O(n^3) for a n*n matrix - loop over upper triangle is O(n^2) and the matrix-updates herein is 
+an O(n) operation. This is depicted in the timing.png plot, where the implemented algorithm is timed across a range of square matrices 
 - and as seen the fit shows a n^x tendency, with x ≈ 3.
 
 Versus GSL: As seen from the timing plot - this implementation is MUCH slower than the one-sided algorithm implemented in GSL.

@@ -1,0 +1,5 @@
+Part A, B and C done.
+Output from program can be seen in 'result.out'
+A plot of the operation time vs. matrix size N is shown in 'timing.png'
+- both of my implementation, but also a GSL implementation. And as seen
+it goes like N^3

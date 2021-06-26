@@ -20,16 +20,18 @@ timing.png: timing.out Makefile
 	set xrange [200:800];\
 	set yrange [0:1000];\
 	a=1;\
-	f(x)=a*x**3;\
-	fit f(x) "$<" using 1:2 via a;\
 	b=1;\
-	g(x)=b*x**3;\
-	fit g(x) "$<" using 1:3 via b;\
+	f(x)=a*x**b;\
+	fit f(x) "$<" using 1:2 via a,b;\
+	c=1;\
+	d=1;\
+	g(x)=c*x**d;\
+	fit g(x) "$<" using 1:3 via c,d;\
 	plot \
-	 "$<" using 1:2 with line color red title "GS QR decomp",\
-	 "$<" using 1:3 with line color black title "gsl-linalg-QR-decomp",\
-	 f(x) with line lt 2 color black title "c1*N**3",\
-	 g(x) with line lt 2 color black title "c2*N**3"\
+	 "$<" using 1:2 with points color red title "GS QR decomp",\
+	 "$<" using 1:3 with points color black title "gsl-linalg-QR-decomp",\
+	 f(x) with line lt 2 color black title "$$\\alpha N^{%.2f}$$"%(b),\
+	 g(x) with line lt 2 color black title "$$\\beta N^{%.2f}$$"%(d)\
 	' | pyxplot
 	
 result.out timing.out: main
