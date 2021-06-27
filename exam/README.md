@@ -1,7 +1,9 @@
 # Examination project 13 - Two sided Jacobi algorithm for SVD
 
 **Author**: Thomas Toft Lindkvist
+
 AUID 643642 - Student number 201905635
+
 35 mod 22 = 13
 
 **Wiki**: http://62.107.14.89/~fedorov/prog/pmwiki/index.php?n=Main.ThomasToftLindkvist
@@ -17,8 +19,8 @@ containing the singular values of A.
 **Convergence**: The criterion for convergence is when two successive sweeps produce the same diagonalized matrix (within machine precision).
 
 **Computational cost**: the algorithm cost is O(n^3) for a n*n matrix - loop over upper triangle is O(n^2) and the matrix-updates herein is 
-an O(n) operation. This is depicted in the timing.png plot, where the implemented algorithm is timed across a range of square matrices 
-- and as seen the fit shows a n^x tendency, with x ≈ 3.
+an O(n) operation. This is depicted in the timing.png plot, where the implemented algorithm is timed across a range of square matrices;
+and as seen the fit shows a n^x tendency, with x ≈ 3.
 
 **Versus GSL**: As seen from the timing plot - this implementation is MUCH slower than the one-sided algorithm implemented in GSL.
 Around 8-11 times slower in the usecases depicted here.
@@ -28,7 +30,7 @@ I would self-evaluated this to a score of 10/10.
 
 
 --------- OUTPUT FROM PROGRAM (see also file output.out)  -----------
-
+```
 EXAMINATION PROJECT 13
 AUTHOR: Thomas Toft Lindkvist
 AUID643642 - Student number: 201905635
@@ -98,6 +100,7 @@ Test 4 (size of A is 286 x 123) with 9 sweeps:  	Success (code 0)
 Test 5 (size of A is 226 x 171) with 9 sweeps:  	Success (code 0)
 Test 6 (size of A is 324 x 135) with 9 sweeps:  	Success (code 0)
 Test 7 (size of A is 387 x 222) with 9 sweeps:  	Success (code 0)
-Test 8 (size of A is 182 x 92) with 9 sweeps:  	    Success (code 0)
-Test 9 (size of A is 88 x 66) with 8 sweeps:  	    Success (code 0)
+Test 8 (size of A is 182 x 92) with 9 sweeps:    Success (code 0)
+Test 9 (size of A is 88 x 66) with 8 sweeps:     Success (code 0)
 Test 10 (size of A is 268 x 83) with 9 sweeps:  	Success (code 0)
+```
