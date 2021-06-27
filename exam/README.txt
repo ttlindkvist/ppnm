@@ -22,6 +22,9 @@ an O(n) operation. This is depicted in the timing.png plot, where the implemente
 Versus GSL: As seen from the timing plot - this implementation is MUCH slower than the one-sided algorithm implemented in GSL.
 Around 8-11 times slower in the usecases depicted here.
 
+Self-evaluation: Since the algorithm has been successfully implemented and the $ O(n^3) $ cost has been confirmed, 
+I would self-evaluated this to a score of 10/10.
+
 
 --------- OUTPUT FROM PROGRAM (see also file output.out)  -----------
 
