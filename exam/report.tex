@@ -18,7 +18,7 @@
     \begin{align}
     	A = VDV^T
     \end{align}
-	This can be done by sweeping across the upper triangle of the matrix cyclically, eliminating off-diagonal elements one-by-one, by a well-tuned Jacobi rotation $ J(p,q) $ eliminating element $ A_{pq}=A_{qp} $.
+	This can be done by sweeping across the upper triangle of the matrix cyclically, eliminating off-diagonal elements pair-by-pair, by a well-tuned Jacobi rotation $ J(p,q) $ eliminating the pair $ A_{pq},\;A_{qp} $.
 	\begin{align}
 		A \to J(p,q)^T A J(p,q)
 	\end{align}
